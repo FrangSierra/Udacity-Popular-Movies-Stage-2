@@ -42,10 +42,6 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
     */
    void setOnClickListener(final MovieGridAdapter.MovieAdapterListener mOnMovieClickListener,
                                   final int position) {
-      mView.setOnClickListener(new OnClickListener() {
-         @Override public void onClick(View v) {
-            mOnMovieClickListener.onMovieClick(position);
-         }
-      });
+      mView.setOnClickListener(v -> mOnMovieClickListener.onMovieClick(position));
    }
 }

@@ -1,4 +1,17 @@
+buildscript {
+    ext {
+        use_jack = false
+        rx_version = "2.0.3"
+        rx_android_version = "2.0.1"
+        picasso_version = "2.5.2"
+        butterkinfe_version = "8.4.0"
+        support_version = "25.0.0"
+        gson_version = "2.8.0"
+    }
+}
+
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 25
@@ -20,18 +33,38 @@ android {
     buildTypes.each {
         it.buildConfigField('String', 'MOVIES_API_KEY', "\"36968661e910fb3398116b564006bffb\"")
     }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.android.support:recyclerview-v7:+'
-    compile "com.android.support:design:+"
-    compile 'com.android.support:cardview-v7:+'
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    //Support
+    compile "com.android.support:appcompat-v7:$support_version"
+    compile "com.android.support:design:$support_version"
+    compile "com.android.support:recyclerview-v7:$support_version"
+    compile "com.android.support:cardview-v7:$support_version"
     compile 'com.android.support.constraint:constraint-layout:1.0.0-beta4'
+
+    //Picasso
+    compile "com.squareup.picasso:picasso:$picasso_version"
+
+    //Util
+    compile "com.jakewharton:butterknife:$butterkinfe_version"
+    compile "com.jakewharton:butterknife-compiler:$butterkinfe_version"
+
+    //Json
+    compile "com.google.code.gson:gson:$gson_version"
+
+    //Rx
+    compile "io.reactivex.rxjava2:rxjava:$rx_version"
+    compile "io.reactivex.rxjava2:rxandroid:$rx_android_version"
+
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.1.0'
     testCompile 'junit:junit:4.12'
 }

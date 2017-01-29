@@ -33,7 +33,6 @@ public final class MovieUtils {
       for (int i = 0; i < movies.length(); i++) {
          result.add(Movie.fromJson(movies.getJSONObject(i)));
       }
-
       return result;
    }
 

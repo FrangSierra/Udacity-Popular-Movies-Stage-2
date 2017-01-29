@@ -3,17 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/filter_by_popular"
+        android:id="@+id/settings"
         android:icon="@drawable/ic_action_settings"
-        android:title="@string/filter_by_popular"
-        android:showAsAction="never"/>
-
-    <item
-        android:id="@+id/filter_by_rating"
-        android:icon="@drawable/ic_action_settings"
-        android:title="@string/filter_top_rated"
-        android:showAsAction="never"/>
-
-
+        android:title="@string/settings_title"
+        android:showAsAction="always"/>
 
 </menu>
