@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent">
+
+        <ProgressBar
+            android:id="@+id/loading_progress_bar"
+            android:layout_gravity="center"
+            android:layout_height="@dimen/progress_bar_size"
+            android:layout_width="@dimen/progress_bar_size"
+            android:visibility="gone" />
+
+        <TextView
+            android:gravity="center_vertical|center_horizontal"
+            android:id="@+id/error_text"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:padding="@dimen/padding_normal"
+            android:text="@string/loading_fail_error_text"
+            android:textSize="@dimen/text_size_big"
+            android:visibility="gone" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/movies_grid_view"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:scrollbars="vertical" />
+    </FrameLayout>

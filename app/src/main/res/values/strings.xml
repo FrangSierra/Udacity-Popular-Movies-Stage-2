@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">PopularMoviesUdacity</string>
+    <string name="action_settings">action_settings</string>
+    <string name="pref_sorting_key" translatable="false">sorting</string>
+    <string name="loading_fail_error_text">It have been not possible load the movies</string>
+    <string name="filter_by_popular">Filter by popular</string>
+    <string name="filter_top_rated">Filter by top rated</string>
+    <string name="rating_text">"Rating: "</string>
+</resources>
