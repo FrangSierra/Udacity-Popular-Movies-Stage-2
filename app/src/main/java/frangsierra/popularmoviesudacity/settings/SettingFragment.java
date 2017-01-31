@@ -1,4 +1,4 @@
-package frangsierra.popularmoviesudacity.ui.fragment;
+package frangsierra.popularmoviesudacity.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;

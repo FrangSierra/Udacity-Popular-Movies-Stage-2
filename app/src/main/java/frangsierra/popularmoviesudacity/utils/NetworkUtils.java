@@ -50,6 +50,22 @@ public final class NetworkUtils {
       return url;
    }
 
+   public static URL buildReviewUrl(long movieId) {
+      String path = String.format("%s/reviews", movieId);
+      Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
+         .appendPath(String.valueOf(path))
+         .build();
+
+      URL url = null;
+      try {
+         url = new URL(builtUri.toString());
+      } catch (MalformedURLException e) {
+         e.printStackTrace();
+      }
+      Log.v(TAG, "Built URI " + url);
+      return url;
+   }
+
    public static URL buildVideoUrl(long movieId) {
       String path = String.format("%s/videos", movieId);
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()

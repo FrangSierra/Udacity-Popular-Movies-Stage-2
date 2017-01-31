@@ -1,10 +1,9 @@
-package frangsierra.popularmoviesudacity.ui.activities;
+package frangsierra.popularmoviesudacity.movies;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
@@ -14,22 +13,24 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import frangsierra.popularmoviesudacity.R;
-import frangsierra.popularmoviesudacity.core.DaggerAppComponent;
-import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.core.ui.DaggerCleanActivity;
 import frangsierra.popularmoviesudacity.data.MovieSorting;
-import frangsierra.popularmoviesudacity.data.MovieSorting.MovieSortingValue;
+import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
+import frangsierra.popularmoviesudacity.settings.SettingActivity;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
 import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListener;
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.schedulers.Schedulers;
 
-public class MainActivity extends AppCompatActivity implements MovieGridAdapter.MovieAdapterListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
+   implements MovieBrowserView, MovieGridAdapter.MovieAdapterListener,
+   SharedPreferences.OnSharedPreferenceChangeListener {
    private static final int GRID_COLUMNS = 2;
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
    @Inject PopularMoviesRepository popularMoviesRepository;
@@ -40,15 +41,25 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
    private int mPagesLoaded = 0;
    private boolean mIsLoading = false;
 
+   @Inject
+   public MovieBrowserActivity() {
+   }
+
    @Override
    protected void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
       ButterKnife.bind(this, this);
-      DaggerAppComponent.builder().build().inject(this);
       initializeRecycler();
-      loadMovieData();
+      startMovieLoading();
       setupSharedPreferences();
+   }
+
+   @Override protected MoviesComponent buildComponent() {
+      return DaggerMoviesComponent.builder()
+         .appComponent(getApplicationComponent())
+         .movieBrowserModule(new MoviesComponent.MovieBrowserModule())
+         .build();
    }
 
    /**
@@ -59,10 +70,10 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
       mMoviesRecyclerGridView.setLayoutManager(gridLayoutManager);
       mMoviesRecyclerGridView.addOnScrollListener(new EndlessRecyclerScrollListener(gridLayoutManager) {
          @Override public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
-            loadMovieData();
+            startMovieLoading();
          }
       });
-      mGridAdapter = new MovieGridAdapter(MainActivity.this, MainActivity.this);
+      mGridAdapter = new MovieGridAdapter(MovieBrowserActivity.this, MovieBrowserActivity.this);
       mMoviesRecyclerGridView.setAdapter(mGridAdapter);
    }
 
@@ -97,22 +108,21 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
    }
 
    @Override public void onFavClick(int position) {
-      //TODO manage favs
-      mGridAdapter.getMovieFromPosition(position).getId();
-      mGridAdapter.notifyItemChanged(position);
+      final Movie movie = mGridAdapter.getMovieFromPosition(position);
+      getPresenter().addMovieToFavorites(movie, position);
    }
 
    @Override
    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
       clearData();
-      loadMovieData();
+      startMovieLoading();
    }
 
 
    /**
     * Start the data loading and hide the views when the load is been processed.
     */
-   private void loadMovieData() {
+   public void startMovieLoading() {
       if (mIsLoading) {
          return;
       }
@@ -122,22 +132,11 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
 
       mIsLoading = true;
 
-      final @MovieSortingValue String filter = PreferenceManager
-         .getDefaultSharedPreferences(MainActivity.this)
+      final @MovieSorting.MovieSortingValue String filter = PreferenceManager
+         .getDefaultSharedPreferences(MovieBrowserActivity.this)
          .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER);
 
-      popularMoviesRepository.retrieveMovies(filter, mPagesLoaded + 1)
-         .subscribeOn(Schedulers.io())
-         .observeOn(AndroidSchedulers.mainThread())
-         .subscribe(movies -> {
-            if (movies != null) {
-               mGridAdapter.addMovies(movies);
-               mPagesLoaded++;
-            } else {
-               mErrorText.setVisibility(View.VISIBLE);
-            }
-            stopLoading();
-         });
+      getPresenter().loadMovieData(filter, mPagesLoaded + 1);
    }
 
    @Override
@@ -159,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
    /**
     * Make the needed calls and show the right views when the load as finished.
     */
-   private void stopLoading() {
+   public void disableLoadingControls() {
       if (!mIsLoading) {
          return;
       }
@@ -169,4 +168,29 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
       mMoviesRecyclerGridView.setVisibility(View.VISIBLE);
       mErrorText.setVisibility(View.INVISIBLE);
    }
+
+   @Override public void setMovies(List<Movie> movies) {
+      mGridAdapter.addMovies(movies);
+      mPagesLoaded++;
+   }
+
+   @Override public void showLoadingError() {
+      mErrorText.setVisibility(View.VISIBLE);
+   }
+
+   @Override public void updateFavoriteMovie(int position) {
+
+   }
+}
+
+
+interface MovieBrowserView {
+
+   void disableLoadingControls();
+
+   void setMovies(List<Movie> movies);
+
+   void showLoadingError();
+
+   void updateFavoriteMovie(int position);
 }

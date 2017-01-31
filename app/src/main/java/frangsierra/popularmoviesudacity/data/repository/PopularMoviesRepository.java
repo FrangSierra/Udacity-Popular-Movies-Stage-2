@@ -5,6 +5,7 @@ import java.util.Set;
 
 import frangsierra.popularmoviesudacity.data.MovieSorting;
 import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
 import io.reactivex.Observable;
 import io.reactivex.Single;
@@ -31,5 +32,5 @@ public interface PopularMoviesRepository {
 
    Single<List<Video>> videos(long movieId);
 
-//   Observable<List<Review>> reviews(long movieId);
+   Single<List<Review>> reviews(long movieId);
 }

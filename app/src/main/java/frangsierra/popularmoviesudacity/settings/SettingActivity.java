@@ -1,4 +1,4 @@
-package frangsierra.popularmoviesudacity.ui.activities;
+package frangsierra.popularmoviesudacity.settings;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;

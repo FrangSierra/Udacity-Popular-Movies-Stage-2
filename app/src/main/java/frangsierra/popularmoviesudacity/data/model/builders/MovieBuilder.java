@@ -10,7 +10,7 @@ public class MovieBuilder {
    private String originalTitle;
    private String overview;
    private String poster_path;
-   private double vote_average;
+   private double voteAverage;
    private long vote_count;
    private String release_date;
    private boolean adultsMovie;
@@ -44,8 +44,8 @@ public class MovieBuilder {
       return this;
    }
 
-   public MovieBuilder setVote_average(double vote_average) {
-      this.vote_average = vote_average;
+   public MovieBuilder setVoteAverage(double voteAverage) {
+      this.voteAverage = voteAverage;
       return this;
    }
 
@@ -85,6 +85,6 @@ public class MovieBuilder {
    }
 
    public Movie createMovie() {
-      return new Movie(id, title, originalTitle, overview, poster_path, vote_average, vote_count, release_date, adultsMovie, language, backdrop, video);
+      return new Movie(id, title, originalTitle, overview, poster_path, voteAverage, vote_count, release_date, adultsMovie, language, backdrop, video);
    }
 }

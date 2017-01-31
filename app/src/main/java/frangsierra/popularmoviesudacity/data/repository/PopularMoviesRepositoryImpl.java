@@ -11,6 +11,7 @@ import javax.inject.Inject;
 
 import frangsierra.popularmoviesudacity.data.MovieSorting;
 import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.utils.NetworkUtils;
 import io.reactivex.Observable;
@@ -19,6 +20,7 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
 
 import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchMoviesFromJson;
+import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchReviewsFromMovieJson;
 import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchVideosFromMovieJson;
 import static frangsierra.popularmoviesudacity.utils.NetworkUtils.getResponseFromHttpUrl;
 
@@ -65,6 +67,20 @@ public class PopularMoviesRepositoryImpl implements PopularMoviesRepository{
             try {
                final List<Video> videos = fetchVideosFromMovieJson(getResponseFromHttpUrl(url));
                e.onSuccess(videos);
+            } catch (IOException | JSONException ex) {
+               e.onError(ex);
+            }
+         }
+      });
+   }
+
+   @Override public Single<List<Review>> reviews(long movieId) {
+      return Single.create(new SingleOnSubscribe<List<Review>>() {
+         @Override public void subscribe(SingleEmitter<List<Review>> e) throws Exception {
+            final URL url = NetworkUtils.buildReviewUrl(movieId);
+            try {
+               final List<Review> reviews = fetchReviewsFromMovieJson(getResponseFromHttpUrl(url));
+               e.onSuccess(reviews);
             } catch (IOException | JSONException ex) {
                e.onError(ex);
             }

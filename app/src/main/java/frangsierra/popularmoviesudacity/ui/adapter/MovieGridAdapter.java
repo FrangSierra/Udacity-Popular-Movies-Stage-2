@@ -12,7 +12,7 @@ import java.util.List;
 
 import frangsierra.popularmoviesudacity.R;
 import frangsierra.popularmoviesudacity.data.model.Movie;
-import frangsierra.popularmoviesudacity.ui.activities.MainActivity;
+import frangsierra.popularmoviesudacity.movies.MovieBrowserActivity;
 
 /**
  * Custom {@link android.support.v7.widget.RecyclerView.Adapter} which works together with a list of
@@ -36,7 +36,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
    @Override public void onBindViewHolder(MovieViewHolder holder, int position) {
       final Movie movie = mMovieList.get(position);
       holder.setOnClickListener(mOnMovieClickListener, position);
-      holder.setImageThumbnail(movie.getPoster_path(), mContext);
+      holder.setImageThumbnail(movie.getPosterPath(), mContext);
    }
 
    @Override public int getItemCount() {
@@ -69,7 +69,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
    /**
     * Custom interface used to implement {@link OnClickListener} method for each movie in {@link MovieViewHolder}.
-    * It is implemented by {@link MainActivity}
+    * It is implemented by {@link MovieBrowserActivity}
     */
    public interface MovieAdapterListener {
       /**

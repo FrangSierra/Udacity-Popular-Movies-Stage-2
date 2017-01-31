@@ -10,15 +10,15 @@
         android:name=".core.App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.activities.MainActivity">
+        <activity android:name=".movies.MovieBrowserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.activities.SettingActivity"/>
-        <activity android:name=".ui.activities.MovieDetailActivity"/>
+        <activity android:name=".settings.SettingActivity"/>
+        <activity android:name=".movies.MovieDetailActivity"/>
     </application>
 
 </manifest>

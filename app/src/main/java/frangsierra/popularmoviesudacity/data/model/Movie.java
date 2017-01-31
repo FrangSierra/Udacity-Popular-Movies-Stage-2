@@ -29,26 +29,26 @@ public class Movie implements Parcelable {
    private final String title;
    private final String originalTitle;
    private final String overview;
-   private final String poster_path;
-   private final double vote_average;
-   private final long vote_count;
-   private final String release_date;
+   private final String posterPath;
+   private final double voteAverage;
+   private final long voteCount;
+   private final String releaseDate;
    private final boolean adultsMovie;
    private final String language;
    private final String backdrop;
    private final boolean video;
 
-   public Movie(long id, String title, String originalTitle, String overview, String poster_path,
-                double vote_average, long vote_count, String release_date, boolean adultsMovie,
+   public Movie(long id, String title, String originalTitle, String overview, String posterPath,
+                double voteAverage, long voteCount, String releaseDate, boolean adultsMovie,
                 String language, String backdrop, boolean video) {
       this.id = id;
       this.title = title;
       this.originalTitle = originalTitle;
       this.overview = overview;
-      this.poster_path = poster_path;
-      this.vote_average = vote_average;
-      this.vote_count = vote_count;
-      this.release_date = release_date;
+      this.posterPath = posterPath;
+      this.voteAverage = voteAverage;
+      this.voteCount = voteCount;
+      this.releaseDate = releaseDate;
       this.adultsMovie = adultsMovie;
       this.language = language;
       this.backdrop = backdrop;
@@ -76,22 +76,22 @@ public class Movie implements Parcelable {
    /**
     * Return the current release date of the {@link Movie}.
     */
-   public String getRelease_date() {
-      return release_date;
+   public String getReleaseDate() {
+      return releaseDate;
    }
 
    /**
     * Return the current formatted rating of the {@link Movie}.
     */
    public String getRating() {
-      return String.format("%s / 10", vote_average);
+      return String.format("%s / 10", voteAverage);
    }
 
    /**
     * Return the current poster path of the {@link Movie}.
     */
-   public String getPoster_path() {
-      return poster_path;
+   public String getPosterPath() {
+      return posterPath;
    }
 
    /**
@@ -104,7 +104,7 @@ public class Movie implements Parcelable {
          .setOriginalTitle(jsonObject.getString(ORIGINAL_TITLE))
          .setOverview(jsonObject.getString(OVERVIEW))
          .setPoster_path(jsonObject.getString(POSTER_PATH))
-         .setVote_average(jsonObject.getDouble(VOTE_AVERAGE))
+         .setVoteAverage(jsonObject.getDouble(VOTE_AVERAGE))
          .setVote_count(jsonObject.getLong(VOTE_COUNT))
          .setRelease_date(jsonObject.getString(RELEASE_DATE))
          .setAdultsMovie(jsonObject.getBoolean(ADULTS))
@@ -114,19 +114,21 @@ public class Movie implements Parcelable {
          .createMovie();
    }
 
-   public Movie(Parcel in) {
-      this.id = in.readLong();
-      this.title = in.readString();
-      this.originalTitle = in.readString();
-      this.overview = in.readString();
-      this.poster_path = in.readString();
-      this.vote_average = in.readDouble();
-      this.vote_count = in.readLong();
-      this.release_date = in.readString();
-      this.adultsMovie = in.readByte() != 0;
-      this.language = in.readString();
-      this.backdrop = in.readString();
-      this.video = in.readByte() != 0;
+   private static Movie fromParcel(Parcel in) {
+      return new MovieBuilder()
+         .setId(in.readLong())
+         .setTitle(in.readString())
+         .setOriginalTitle(in.readString())
+         .setOverview(in.readString())
+         .setPoster_path(in.readString())
+         .setVoteAverage(in.readDouble())
+         .setVote_count(in.readLong())
+         .setRelease_date(in.readString())
+         .setAdultsMovie(in.readByte() != 0)
+         .setLanguage(in.readString())
+         .setBackdrop(in.readString())
+         .setVideo(in.readByte() != 0)
+         .createMovie();
    }
 
    @Override public int describeContents() {
@@ -138,10 +140,10 @@ public class Movie implements Parcelable {
       dest.writeString(title);
       dest.writeString(originalTitle);
       dest.writeString(overview);
-      dest.writeString(poster_path);
-      dest.writeDouble(vote_average);
-      dest.writeLong(vote_count);
-      dest.writeString(release_date);
+      dest.writeString(posterPath);
+      dest.writeDouble(voteAverage);
+      dest.writeLong(voteCount);
+      dest.writeString(releaseDate);
       dest.writeByte((byte) (adultsMovie ? 1 : 0));
       dest.writeString(language);
       dest.writeString(backdrop);
@@ -156,7 +158,7 @@ public class Movie implements Parcelable {
 
       @Override
       public Movie createFromParcel(Parcel source) {
-         return new MovieBuilder().setSource(source).createMovie();
+         return fromParcel(source);
       }
    };
 }
