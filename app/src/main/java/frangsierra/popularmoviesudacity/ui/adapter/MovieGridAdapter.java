@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frangsierra.popularmoviesudacity.R;
-import frangsierra.popularmoviesudacity.data.Movie;
+import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.ui.activities.MainActivity;
 
 /**
@@ -76,5 +76,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
        * Method dispatched when the user click's in a movie. Retrieving the current position in the {@link MovieGridAdapter}.
        */
       void onMovieClick(int position);
+
+      void onFavClick(int position);
    }
 }

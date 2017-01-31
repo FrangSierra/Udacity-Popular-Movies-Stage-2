@@ -12,7 +12,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import frangsierra.popularmoviesudacity.R;
-import frangsierra.popularmoviesudacity.data.Movie;
+import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.utils.MovieUtils;
 
 /**

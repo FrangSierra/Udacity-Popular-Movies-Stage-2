@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import frangsierra.popularmoviesudacity.R;
-import frangsierra.popularmoviesudacity.data.Movie;
+import frangsierra.popularmoviesudacity.data.model.Movie;
 
 import static frangsierra.popularmoviesudacity.utils.MovieUtils.buildPosterUri;
 
@@ -20,12 +20,14 @@ import static frangsierra.popularmoviesudacity.utils.MovieUtils.buildPosterUri;
  */
 class MovieViewHolder extends RecyclerView.ViewHolder {
    private final View mView;
+   private final ImageView mMovieThumbnailFav;
    private ImageView mMovieThumbnail;
 
    MovieViewHolder(View itemView) {
       super(itemView);
       mView = itemView;
       mMovieThumbnail = (ImageView) itemView.findViewById(R.id.movie_thumbnail_image);
+      mMovieThumbnailFav = (ImageView) itemView.findViewById(R.id.movie_thumbnail_fav);
    }
 
    /**
@@ -43,5 +45,6 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
    void setOnClickListener(final MovieGridAdapter.MovieAdapterListener mOnMovieClickListener,
                                   final int position) {
       mView.setOnClickListener(v -> mOnMovieClickListener.onMovieClick(position));
+      mMovieThumbnailFav.setOnClickListener(v -> mOnMovieClickListener.onFavClick(position));
    }
 }

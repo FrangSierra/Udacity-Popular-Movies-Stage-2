@@ -14,33 +14,25 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.json.JSONException;
-
-import java.io.IOException;
-import java.net.URL;
-import java.util.List;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import frangsierra.popularmoviesudacity.R;
-import frangsierra.popularmoviesudacity.data.Movie;
+import frangsierra.popularmoviesudacity.core.DaggerAppComponent;
+import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.MovieSorting;
 import frangsierra.popularmoviesudacity.data.MovieSorting.MovieSortingValue;
+import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
 import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListener;
-import frangsierra.popularmoviesudacity.utils.NetworkUtils;
-import io.reactivex.Single;
-import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-
-import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchMoviesFromJson;
-import static frangsierra.popularmoviesudacity.utils.NetworkUtils.getResponseFromHttpUrl;
 
 public class MainActivity extends AppCompatActivity implements MovieGridAdapter.MovieAdapterListener, SharedPreferences.OnSharedPreferenceChangeListener {
    private static final int GRID_COLUMNS = 2;
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
+   @Inject PopularMoviesRepository popularMoviesRepository;
    @BindView(R.id.movies_grid_view) RecyclerView mMoviesRecyclerGridView;
    @BindView(R.id.loading_progress_bar) ProgressBar mLoadingProgressBar;
    @BindView(R.id.error_text) TextView mErrorText;
@@ -53,6 +45,7 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
       super.onCreate(savedInstanceState);
       setContentView(R.layout.activity_main);
       ButterKnife.bind(this, this);
+      DaggerAppComponent.builder().build().inject(this);
       initializeRecycler();
       loadMovieData();
       setupSharedPreferences();
@@ -103,30 +96,16 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
       startActivity(intent);
    }
 
+   @Override public void onFavClick(int position) {
+      //TODO manage favs
+      mGridAdapter.getMovieFromPosition(position).getId();
+      mGridAdapter.notifyItemChanged(position);
+   }
+
    @Override
    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
       clearData();
       loadMovieData();
-   }
-   /**
-    * {@link Single} used to make a Http call in a background thread and retrieve from our movie API a JSON string
-    * object which contains 20 movies per page.
-    */
-   private Single<List<Movie>> retrieveMovies(int page) {
-      return Single.create(new SingleOnSubscribe<List<Movie>>() {
-         @Override public void subscribe(SingleEmitter<List<Movie>> e) throws Exception {
-            final @MovieSortingValue String filter = PreferenceManager
-               .getDefaultSharedPreferences(MainActivity.this)
-               .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER);
-            final URL url = NetworkUtils.buildUrl(filter, page);
-            try {
-               final List<Movie> movies = fetchMoviesFromJson(getResponseFromHttpUrl(url));
-               e.onSuccess(movies);
-            } catch (IOException | JSONException ex) {
-               e.onError(ex);
-            }
-         }
-      });
    }
 
 
@@ -142,7 +121,12 @@ public class MainActivity extends AppCompatActivity implements MovieGridAdapter.
       mMoviesRecyclerGridView.setVisibility(View.INVISIBLE);
 
       mIsLoading = true;
-      retrieveMovies(mPagesLoaded + 1)
+
+      final @MovieSortingValue String filter = PreferenceManager
+         .getDefaultSharedPreferences(MainActivity.this)
+         .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER);
+
+      popularMoviesRepository.retrieveMovies(filter, mPagesLoaded + 1)
          .subscribeOn(Schedulers.io())
          .observeOn(AndroidSchedulers.mainThread())
          .subscribe(movies -> {

@@ -1,4 +1,4 @@
-package frangsierra.popularmoviesudacity.data;
+package frangsierra.popularmoviesudacity.data.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -6,23 +6,25 @@ import android.os.Parcelable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import frangsierra.popularmoviesudacity.data.model.builders.MovieBuilder;
+
 /**
  * POJO class for the movie's object.
  */
 public class Movie implements Parcelable {
 
-   private static final String KEY_ID = "id";
-   private static final String KEY_TITLE = "title";
-   private static final String KEY_ORIGINAL_TITLE = "original_title";
-   private static final String KEY_OVERVIEW = "overview";
-   private static final String KEY_POSTER_PATH = "poster_path";
-   private static final String KEY_VOTE_AVERAGE = "vote_average";
-   private static final String KEY_VOTE_COUNT = "vote_count";
-   private static final String KEY_RELEASE_DATE = "release_date";
-   private static final String KEY_ADULTS = "adult";
-   private static final String KEY_VIDEO = "video";
-   private static final String KEY_LANGUAGE = "original_language";
-   private static final String KEY_BACKDROP = "backdrop_path";
+   private static final String ID = "id";
+   private static final String TITLE = "title";
+   private static final String ORIGINAL_TITLE = "original_title";
+   private static final String OVERVIEW = "overview";
+   private static final String POSTER_PATH = "poster_path";
+   private static final String VOTE_AVERAGE = "vote_average";
+   private static final String VOTE_COUNT = "vote_count";
+   private static final String RELEASE_DATE = "release_date";
+   private static final String ADULTS = "adult";
+   private static final String VIDEO = "video";
+   private static final String LANGUAGE = "original_language";
+   private static final String BACKDROP = "backdrop_path";
    private final long id;
    private final String title;
    private final String originalTitle;
@@ -53,19 +55,8 @@ public class Movie implements Parcelable {
       this.video = video;
    }
 
-   public Movie(Parcel source) {
-      this.id = source.readLong();
-      this.title = source.readString();
-      this.originalTitle = source.readString();
-      this.overview = source.readString();
-      this.poster_path = source.readString();
-      this.vote_average = source.readDouble();
-      this.vote_count = source.readLong();
-      this.release_date = source.readString();
-      this.adultsMovie = source.readByte() != 0;
-      this.language = source.readString();
-      this.backdrop = source.readString();
-      this.video = source.readByte() != 0;
+   public long getId() {
+      return id;
    }
 
    /**
@@ -107,20 +98,35 @@ public class Movie implements Parcelable {
     * Build a {@link Movie} object from a given {@link JSONObject}.
     */
    public static Movie fromJson(JSONObject jsonObject) throws JSONException {
-      return new Movie(
-         jsonObject.getLong(KEY_ID),
-         jsonObject.getString(KEY_TITLE),
-         jsonObject.getString(KEY_ORIGINAL_TITLE),
-         jsonObject.getString(KEY_OVERVIEW),
-         jsonObject.getString(KEY_POSTER_PATH),
-         jsonObject.getDouble(KEY_VOTE_AVERAGE),
-         jsonObject.getLong(KEY_VOTE_COUNT),
-         jsonObject.getString(KEY_RELEASE_DATE),
-         jsonObject.getBoolean(KEY_ADULTS),
-         jsonObject.getString(KEY_LANGUAGE),
-         jsonObject.getString(KEY_BACKDROP),
-         jsonObject.getBoolean(KEY_VIDEO)
-      );
+      return new MovieBuilder()
+         .setId(jsonObject.getLong(ID))
+         .setTitle(jsonObject.getString(TITLE))
+         .setOriginalTitle(jsonObject.getString(ORIGINAL_TITLE))
+         .setOverview(jsonObject.getString(OVERVIEW))
+         .setPoster_path(jsonObject.getString(POSTER_PATH))
+         .setVote_average(jsonObject.getDouble(VOTE_AVERAGE))
+         .setVote_count(jsonObject.getLong(VOTE_COUNT))
+         .setRelease_date(jsonObject.getString(RELEASE_DATE))
+         .setAdultsMovie(jsonObject.getBoolean(ADULTS))
+         .setLanguage(jsonObject.getString(LANGUAGE))
+         .setBackdrop(jsonObject.getString(BACKDROP))
+         .setVideo(jsonObject.getBoolean(VIDEO))
+         .createMovie();
+   }
+
+   public Movie(Parcel in) {
+      this.id = in.readLong();
+      this.title = in.readString();
+      this.originalTitle = in.readString();
+      this.overview = in.readString();
+      this.poster_path = in.readString();
+      this.vote_average = in.readDouble();
+      this.vote_count = in.readLong();
+      this.release_date = in.readString();
+      this.adultsMovie = in.readByte() != 0;
+      this.language = in.readString();
+      this.backdrop = in.readString();
+      this.video = in.readByte() != 0;
    }
 
    @Override public int describeContents() {
@@ -150,7 +156,7 @@ public class Movie implements Parcelable {
 
       @Override
       public Movie createFromParcel(Parcel source) {
-         return new Movie(source);
+         return new MovieBuilder().setSource(source).createMovie();
       }
    };
 }

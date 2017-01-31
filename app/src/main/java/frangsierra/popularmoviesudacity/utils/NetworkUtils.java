@@ -33,11 +33,27 @@ public final class NetworkUtils {
     *               {@link MovieSorting movie sorting } class
     * @return The URL to use to query the weather server.
     */
-   public static URL buildUrl(@MovieSortingValue String filter, int pages) {
+   public static URL buildMovieUrl(@MovieSortingValue String filter, int pages) {
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
          .appendPath(filter)
          .appendQueryParameter(API_PARAM_PAGE, String.valueOf(pages))
          .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
+         .build();
+
+      URL url = null;
+      try {
+         url = new URL(builtUri.toString());
+      } catch (MalformedURLException e) {
+         e.printStackTrace();
+      }
+      Log.v(TAG, "Built URI " + url);
+      return url;
+   }
+
+   public static URL buildVideoUrl(long movieId) {
+      String path = String.format("%s/videos", movieId);
+      Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
+         .appendPath(String.valueOf(path))
          .build();
 
       URL url = null;
