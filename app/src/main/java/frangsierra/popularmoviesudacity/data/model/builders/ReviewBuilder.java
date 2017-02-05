@@ -4,6 +4,9 @@ import android.os.Parcel;
 
 import frangsierra.popularmoviesudacity.data.model.Review;
 
+/**
+ * Builder class for the {@link Review class}
+ */
 public class ReviewBuilder {
    private String id;
    private String author;

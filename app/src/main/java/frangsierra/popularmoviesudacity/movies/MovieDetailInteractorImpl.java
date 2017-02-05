@@ -1,15 +1,38 @@
 package frangsierra.popularmoviesudacity.movies;
 
+import android.util.Pair;
+
 import javax.inject.Inject;
 
-/**
- * Created by Durdin on 31/01/2017.
- */
+import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
+import io.reactivex.Completable;
+import io.reactivex.processors.PublishProcessor;
 
-public class MovieDetailInteractorImpl implements MovieDetailInteractor{
-   @Inject public MovieDetailInteractorImpl() {
+/**
+ * Interactor class for {@link MovieDetailActivity}. It is in charge of communicate the repository with
+ * the presenter.
+ */
+public class MovieDetailInteractorImpl implements MovieDetailInteractor {
+   private PopularMoviesRepository repository;
+
+   @Inject public MovieDetailInteractorImpl(PopularMoviesRepository repository) {
+      this.repository = repository;
+   }
+
+   @Override public PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor() {
+      return repository.getFavoredProcessor();
+   }
+
+   @Override public Completable setMovieFavored(Movie movie, boolean favored) {
+      movie.setFavMovie(favored);
+      return  favored ? repository.saveMovie(movie) : repository.deleteMovie(movie);
    }
 }
+
 interface MovieDetailInteractor {
 
+   PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor();
+
+   Completable setMovieFavored(Movie movie, boolean favored);
 }

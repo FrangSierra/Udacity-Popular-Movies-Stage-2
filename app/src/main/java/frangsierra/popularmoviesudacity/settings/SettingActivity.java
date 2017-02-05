@@ -7,7 +7,9 @@ import android.view.MenuItem;
 
 import frangsierra.popularmoviesudacity.R;
 
-
+/**
+ * Activity in charge of inflate the {@link SettingFragment} class which store and update the application Settings.
+ */
 public class SettingActivity extends AppCompatActivity {
 
    @Override

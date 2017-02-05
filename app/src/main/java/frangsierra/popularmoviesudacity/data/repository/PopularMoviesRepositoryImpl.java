@@ -1,9 +1,15 @@
 package frangsierra.popularmoviesudacity.data.repository;
 
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.database.Cursor;
+import android.util.Pair;
+
 import org.json.JSONException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -13,20 +19,36 @@ import frangsierra.popularmoviesudacity.data.MovieSorting;
 import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
+import frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract;
 import frangsierra.popularmoviesudacity.utils.NetworkUtils;
-import io.reactivex.Observable;
+import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.SingleOnSubscribe;
+import io.reactivex.processors.PublishProcessor;
 
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_ID;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.CONTENT_URI;
 import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchMoviesFromJson;
 import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchReviewsFromMovieJson;
 import static frangsierra.popularmoviesudacity.utils.MovieUtils.fetchVideosFromMovieJson;
+import static frangsierra.popularmoviesudacity.utils.MovieUtils.getMovieValues;
 import static frangsierra.popularmoviesudacity.utils.NetworkUtils.getResponseFromHttpUrl;
 
-public class PopularMoviesRepositoryImpl implements PopularMoviesRepository{
+/**
+ * Implementation for the {@link PopularMoviesRepository} interface. It contains all the methods
+ * associated to work together with application data.
+ */
+public class PopularMoviesRepositoryImpl implements PopularMoviesRepository {
+   private final String[] movieIdsProjection = new String[]{
+      MovieDatabaseContract.Movies.COLUMN_MOVIE_ID
+   };
 
-   @Inject public PopularMoviesRepositoryImpl() {
+   private final PublishProcessor<Pair<Long, Boolean>> favoredProcessor = PublishProcessor.create();
+   private ContentResolver contentResolver;
+
+   @Inject public PopularMoviesRepositoryImpl(ContentResolver contentResolver) {
+      this.contentResolver = contentResolver;
    }
 
    @Override
@@ -44,20 +66,34 @@ public class PopularMoviesRepositoryImpl implements PopularMoviesRepository{
       });
    }
 
-   @Override public Observable<List<Movie>> savedMovies() {
-      return null;
+   @Override public Single<Set<Long>> savedMovieIds() {
+      return Single.create(e -> {
+         Set<Long> idSet = new HashSet<>();
+         final Cursor query = contentResolver.query(CONTENT_URI, movieIdsProjection, null, null, null);
+         if (query.moveToFirst()) {
+            do {
+               idSet.add(query.getLong(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_ID)));
+            } while (query.moveToNext());
+         }
+         e.onSuccess(idSet);
+      });
    }
 
-   @Override public Observable<Set<Long>> savedMovieIds() {
-      return null;
+   @Override public Completable saveMovie(Movie movie) {
+      return Completable.create(e -> {
+         final ContentValues movieValues = getMovieValues(movie);
+         contentResolver.insert(CONTENT_URI, movieValues);
+         e.onComplete();
+      }).doOnComplete(() -> favoredProcessor.onNext(new Pair<>(movie.getId(), true)));
    }
 
-   @Override public void saveMovie(Movie movie) {
-
-   }
-
-   @Override public void deleteMovie(Movie movie) {
-
+   @Override public Completable deleteMovie(Movie movie) {
+      return Completable.create(e -> {
+         final String where = String.format("&s=?", COLUMN_MOVIE_ID);
+         final String[] args = new String[]{String.valueOf(movie.getId())};
+         contentResolver.delete(CONTENT_URI, where, args);
+         e.onComplete();
+      }).doOnComplete(() -> favoredProcessor.onNext(new Pair<>(movie.getId(), false)));
    }
 
    @Override public Single<List<Video>> videos(long movieId) {
@@ -86,5 +122,9 @@ public class PopularMoviesRepositoryImpl implements PopularMoviesRepository{
             }
          }
       });
+   }
+
+   @Override public PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor() {
+      return favoredProcessor;
    }
 }

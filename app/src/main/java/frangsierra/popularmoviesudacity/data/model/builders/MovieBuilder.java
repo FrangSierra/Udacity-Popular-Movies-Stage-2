@@ -1,23 +1,24 @@
 package frangsierra.popularmoviesudacity.data.model.builders;
 
-import android.os.Parcel;
-
 import frangsierra.popularmoviesudacity.data.model.Movie;
 
+/**
+ * Factory builder class for {@link Movie}
+ */
 public class MovieBuilder {
    private long id;
    private String title;
    private String originalTitle;
    private String overview;
-   private String poster_path;
+   private String posterPath;
    private double voteAverage;
-   private long vote_count;
-   private String release_date;
+   private long voteCount;
+   private String releaseDate;
    private boolean adultsMovie;
    private String language;
    private String backdrop;
    private boolean video;
-   private Parcel source;
+   private boolean isFav = false;
 
    public MovieBuilder setId(long id) {
       this.id = id;
@@ -39,8 +40,8 @@ public class MovieBuilder {
       return this;
    }
 
-   public MovieBuilder setPoster_path(String poster_path) {
-      this.poster_path = poster_path;
+   public MovieBuilder setPosterPath(String posterPath) {
+      this.posterPath = posterPath;
       return this;
    }
 
@@ -49,13 +50,13 @@ public class MovieBuilder {
       return this;
    }
 
-   public MovieBuilder setVote_count(long vote_count) {
-      this.vote_count = vote_count;
+   public MovieBuilder setVoteCount(long voteCount) {
+      this.voteCount = voteCount;
       return this;
    }
 
-   public MovieBuilder setRelease_date(String release_date) {
-      this.release_date = release_date;
+   public MovieBuilder setReleaseDate(String releaseDate) {
+      this.releaseDate = releaseDate;
       return this;
    }
 
@@ -79,12 +80,12 @@ public class MovieBuilder {
       return this;
    }
 
-   public MovieBuilder setSource(Parcel source) {
-      this.source = source;
+   public MovieBuilder setAsFavorite(boolean isFav) {
+      this.isFav = isFav;
       return this;
    }
 
    public Movie createMovie() {
-      return new Movie(id, title, originalTitle, overview, poster_path, voteAverage, vote_count, release_date, adultsMovie, language, backdrop, video);
+      return new Movie(id, title, originalTitle, overview, posterPath, voteAverage, voteCount, releaseDate, adultsMovie, language, backdrop, video, isFav);
    }
 }

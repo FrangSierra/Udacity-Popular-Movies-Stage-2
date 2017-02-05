@@ -48,7 +48,7 @@ public interface BasePresenter<V> {
    void track(Disposable subscription);
 
    /**
-    * cancel all the pendent Rxjava subscriptions
+    * cancel all the pendent Rxjava subscriptions.
     */
    void cancelSubscriptions();
 }

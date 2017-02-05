@@ -55,9 +55,23 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
    /**
     * Return the movie in the list situated in the given position.
     */
-   public Movie getMovieFromPosition(int position){
+   public Movie getMovieFromPosition(int position) {
       return mMovieList.get(position);
    }
+
+   /**
+    * Go through the movies on the list to update one of them with his new favored value.
+    */
+   public void updateMovieAsFavored(Long movieId, boolean fav) {
+      for (int i = 0; i < mMovieList.size(); i++) {
+         final Movie movie = mMovieList.get(i);
+         if (movie.getId() != movieId) continue;
+         movie.setFavMovie(fav);
+         notifyItemChanged(i);
+         break;
+      }
+   }
+
 
    /**
     * Add a list of {@link Movie movies} to the current adapter list.
@@ -76,7 +90,5 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
        * Method dispatched when the user click's in a movie. Retrieving the current position in the {@link MovieGridAdapter}.
        */
       void onMovieClick(int position);
-
-      void onFavClick(int position);
    }
 }

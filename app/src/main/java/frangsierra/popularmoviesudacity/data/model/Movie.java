@@ -37,10 +37,11 @@ public class Movie implements Parcelable {
    private final String language;
    private final String backdrop;
    private final boolean video;
+   boolean isFavMovie = false;
 
    public Movie(long id, String title, String originalTitle, String overview, String posterPath,
                 double voteAverage, long voteCount, String releaseDate, boolean adultsMovie,
-                String language, String backdrop, boolean video) {
+                String language, String backdrop, boolean video, boolean isFavMovie) {
       this.id = id;
       this.title = title;
       this.originalTitle = originalTitle;
@@ -53,6 +54,7 @@ public class Movie implements Parcelable {
       this.language = language;
       this.backdrop = backdrop;
       this.video = video;
+      this.isFavMovie = isFavMovie;
    }
 
    public long getId() {
@@ -94,6 +96,42 @@ public class Movie implements Parcelable {
       return posterPath;
    }
 
+   public String getOriginalTitle() {
+      return originalTitle;
+   }
+
+   public double getVoteAverage() {
+      return voteAverage;
+   }
+
+   public long getVoteCount() {
+      return voteCount;
+   }
+
+   public boolean isAdultsMovie() {
+      return adultsMovie;
+   }
+
+   public String getLanguage() {
+      return language;
+   }
+
+   public String getBackdrop() {
+      return backdrop;
+   }
+
+   public boolean isVideo() {
+      return video;
+   }
+
+   public boolean isFavMovie() {
+      return isFavMovie;
+   }
+
+   public void setFavMovie(boolean favMovie) {
+      isFavMovie = favMovie;
+   }
+
    /**
     * Build a {@link Movie} object from a given {@link JSONObject}.
     */
@@ -103,10 +141,10 @@ public class Movie implements Parcelable {
          .setTitle(jsonObject.getString(TITLE))
          .setOriginalTitle(jsonObject.getString(ORIGINAL_TITLE))
          .setOverview(jsonObject.getString(OVERVIEW))
-         .setPoster_path(jsonObject.getString(POSTER_PATH))
+         .setPosterPath(jsonObject.getString(POSTER_PATH))
          .setVoteAverage(jsonObject.getDouble(VOTE_AVERAGE))
-         .setVote_count(jsonObject.getLong(VOTE_COUNT))
-         .setRelease_date(jsonObject.getString(RELEASE_DATE))
+         .setVoteCount(jsonObject.getLong(VOTE_COUNT))
+         .setReleaseDate(jsonObject.getString(RELEASE_DATE))
          .setAdultsMovie(jsonObject.getBoolean(ADULTS))
          .setLanguage(jsonObject.getString(LANGUAGE))
          .setBackdrop(jsonObject.getString(BACKDROP))
@@ -120,14 +158,15 @@ public class Movie implements Parcelable {
          .setTitle(in.readString())
          .setOriginalTitle(in.readString())
          .setOverview(in.readString())
-         .setPoster_path(in.readString())
+         .setPosterPath(in.readString())
          .setVoteAverage(in.readDouble())
-         .setVote_count(in.readLong())
-         .setRelease_date(in.readString())
+         .setVoteCount(in.readLong())
+         .setReleaseDate(in.readString())
          .setAdultsMovie(in.readByte() != 0)
          .setLanguage(in.readString())
          .setBackdrop(in.readString())
          .setVideo(in.readByte() != 0)
+         .setAsFavorite(in.readByte() != 0)
          .createMovie();
    }
 
@@ -148,6 +187,7 @@ public class Movie implements Parcelable {
       dest.writeString(language);
       dest.writeString(backdrop);
       dest.writeByte((byte) (video ? 1 : 0));
+      dest.writeByte((byte) (isFavMovie ? 1 : 0));
    }
 
    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
@@ -161,4 +201,5 @@ public class Movie implements Parcelable {
          return fromParcel(source);
       }
    };
+
 }

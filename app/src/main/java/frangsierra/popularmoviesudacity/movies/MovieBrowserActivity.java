@@ -28,15 +28,21 @@ import frangsierra.popularmoviesudacity.settings.SettingActivity;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
 import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListener;
 
+/**
+ * Main application activity, it start the movie load when the application is launched.
+ */
 public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
    implements MovieBrowserView, MovieGridAdapter.MovieAdapterListener,
    SharedPreferences.OnSharedPreferenceChangeListener {
-   private static final int GRID_COLUMNS = 2;
+
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
+   private static final int GRID_COLUMNS = 2;
+
    @Inject PopularMoviesRepository popularMoviesRepository;
    @BindView(R.id.movies_grid_view) RecyclerView mMoviesRecyclerGridView;
    @BindView(R.id.loading_progress_bar) ProgressBar mLoadingProgressBar;
    @BindView(R.id.error_text) TextView mErrorText;
+
    private MovieGridAdapter mGridAdapter;
    private int mPagesLoaded = 0;
    private boolean mIsLoading = false;
@@ -107,11 +113,6 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
       startActivity(intent);
    }
 
-   @Override public void onFavClick(int position) {
-      final Movie movie = mGridAdapter.getMovieFromPosition(position);
-      getPresenter().addMovieToFavorites(movie, position);
-   }
-
    @Override
    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
       clearData();
@@ -178,9 +179,10 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
       mErrorText.setVisibility(View.VISIBLE);
    }
 
-   @Override public void updateFavoriteMovie(int position) {
-
+   @Override public void updateMovieAsFavored(Long movieId, Boolean favored) {
+      mGridAdapter.updateMovieAsFavored(movieId, favored);
    }
+
 }
 
 
@@ -192,5 +194,5 @@ interface MovieBrowserView {
 
    void showLoadingError();
 
-   void updateFavoriteMovie(int position);
+   void updateMovieAsFavored(Long movieId, Boolean favored);
 }

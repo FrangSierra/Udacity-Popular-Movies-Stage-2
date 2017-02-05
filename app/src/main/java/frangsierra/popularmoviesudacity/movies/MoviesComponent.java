@@ -22,7 +22,7 @@ interface MoviesComponent {
    void inject(MovieDetailActivity movieDetailActivity);
 
    @Module
-   public class MovieBrowserModule {
+   class MovieBrowserModule {
       @ViewScope
       @Provides
       MovieBrowserPresenter providePresenter(MovieBrowserPresenterImpl impl) {
@@ -38,7 +38,7 @@ interface MoviesComponent {
    }
 
    @Module
-   public class MovieDetailModule {
+   class MovieDetailModule {
       @ViewScope
       @Provides
       MovieDetailPresenter providePresenter(MovieDetailPresenterImpl impl) {

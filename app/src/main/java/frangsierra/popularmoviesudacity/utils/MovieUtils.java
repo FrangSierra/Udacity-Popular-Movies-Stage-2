@@ -1,5 +1,6 @@
 package frangsierra.popularmoviesudacity.utils;
 
+import android.content.ContentValues;
 import android.net.Uri;
 
 import org.json.JSONArray;
@@ -13,6 +14,16 @@ import java.util.List;
 import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
+
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_BACKDROP_PATH;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_FAVORED;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_ID;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_OVERVIEW;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_POSTER_PATH;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_RELEASE_DATE;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_TITLE;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE;
+import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract.Movies.COLUMN_MOVIE_VOTE_COUNT;
 
 /**
  * Util class for methods related with the {@link Movie} object.
@@ -39,6 +50,10 @@ public final class MovieUtils {
       return result;
    }
 
+   /**
+    * @param jsonStr Full JSON String of data retrieved from the {@link NetworkUtils#getResponseFromHttpUrl(URL) http call}.
+    * @return a list of {@link Video} objects from the JSON.
+    */
    public static List<Video> fetchVideosFromMovieJson(String jsonStr) throws JSONException {
       JSONObject json = new JSONObject(jsonStr);
       JSONArray videos = json.getJSONArray(VIDEO_RESULTS);
@@ -50,6 +65,10 @@ public final class MovieUtils {
       return result;
    }
 
+   /**
+    * @param jsonStr Full JSON String of data retrieved from the {@link NetworkUtils#getResponseFromHttpUrl(URL) http call}.
+    * @return a list of {@link Review} objects from the JSON.
+    */
    public static List<Review> fetchReviewsFromMovieJson(String jsonStr) throws JSONException {
       JSONObject json = new JSONObject(jsonStr);
       JSONArray reviews = json.getJSONArray(REVIEW_RESULTS);
@@ -73,5 +92,22 @@ public final class MovieUtils {
          .appendPath(API_POSTER_DEFAULT_SIZE)
          .appendEncodedPath(posterPath)
          .build();
+   }
+
+   /**
+    * Return a {@link ContentValues} item with the values from a {@link Movie}.
+    */
+   public static ContentValues getMovieValues(Movie movie) {
+      final ContentValues values = new ContentValues();
+      values.put(COLUMN_MOVIE_ID, movie.getId());
+      values.put(COLUMN_MOVIE_TITLE, movie.getTitle());
+      values.put(COLUMN_MOVIE_OVERVIEW, movie.getOverview());
+      values.put(COLUMN_MOVIE_VOTE_COUNT, movie.getVoteCount());
+      values.put(COLUMN_MOVIE_VOTE_AVERAGE, movie.getVoteAverage());
+      values.put(COLUMN_MOVIE_RELEASE_DATE, movie.getReleaseDate());
+      values.put(COLUMN_MOVIE_FAVORED, movie.isFavMovie());
+      values.put(COLUMN_MOVIE_POSTER_PATH, movie.getPosterPath());
+      values.put(COLUMN_MOVIE_BACKDROP_PATH, movie.getBackdrop());
+      return values;
    }
 }

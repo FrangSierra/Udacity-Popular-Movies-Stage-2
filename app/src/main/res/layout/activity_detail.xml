@@ -30,61 +30,81 @@
         tools:layout_constraintTop_creator="1">
 
         <LinearLayout
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_height="match_parent"
-                android:layout_width="match_parent"
-                android:orientation="horizontal">
+            <RelativeLayout
+                android:clipChildren="false"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent">
 
                 <ImageView
                     android:id="@+id/movie_poster"
                     android:layout_height="@dimen/detail_activity_poster_height"
+                    android:layout_marginBottom="@dimen/margin_normal"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
                     android:layout_width="@dimen/detail_activity_poster_width" />
 
+                <ImageButton
+                    android:id="@+id/movie_favorite_button"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_height="64dp"
+                    android:layout_width="64dp"
+                    android:padding="@dimen/padding_small"
+                    android:scaleType="centerInside"
+                    android:background="@android:color/transparent"
+                    android:src="@drawable/selector_fav_button" />
+
                 <LinearLayout
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_toEndOf="@id/movie_poster"
+                    android:layout_toRightOf="@id/movie_poster"
                     android:layout_width="match_parent"
                     android:orientation="vertical"
-                    android:paddingLeft="@dimen/padding_small">
+                    android:padding="@dimen/padding_normal">
 
                     <TextView
                         android:id="@+id/movie_title"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:textSize="@dimen/text_size_normal" />
+                        android:textColor="@android:color/black"
+                        android:textSize="@dimen/text_size_large"
+                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/movie_rating"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:textSize="@dimen/text_size_normal" />
-
-                    <TextView
-                        android:id="@+id/movie_release_date_label"
-                        android:layout_height="wrap_content"
-                        android:layout_width="match_parent"
-                        android:textSize="@dimen/text_size_normal" />
 
                     <TextView
                         android:id="@+id/movie_release_date"
                         android:layout_height="wrap_content"
                         android:layout_width="match_parent"
-                        android:textSize="@dimen/text_size_normal" />
+                        android:textSize="@dimen/text_size_medium" />
+
+                    <TextView
+                        android:id="@+id/movie_rating"
+                        android:layout_height="wrap_content"
+                        android:layout_width="match_parent"
+                        android:textSize="@dimen/text_size_medium" />
 
                 </LinearLayout>
-            </LinearLayout>
+
+            </RelativeLayout>
+
+            <View
+                android:background="@color/colorAccent"
+                android:layout_height="1dp"
+                android:layout_width="match_parent" />
 
             <TextView
                 android:id="@+id/movie_overview"
                 android:layout_height="wrap_content"
-                android:layout_width="fill_parent"
-                android:textSize="@dimen/text_size_normal"
-                tools:layout_editor_absoluteX="151dp"
-                tools:layout_editor_absoluteY="297dp" />
-
+                android:layout_width="match_parent"
+                android:padding="@dimen/padding_normal"
+                android:textSize="@dimen/text_size_medium" />
         </LinearLayout>
     </ScrollView>
 

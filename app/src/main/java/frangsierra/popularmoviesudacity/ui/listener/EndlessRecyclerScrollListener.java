@@ -12,7 +12,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
  * <p>
  * This class have been taked from Github community.
  *
- * @see <a href="https://gist.github.com/nesquena/d09dc68ff07e845cc622">
+ * @see <a href="https://gist.github.com/nesquena/d09dc68ff07e845cc622"/>
  */
 public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrollListener {
    // The minimum amount of items to have below your current scroll position
@@ -44,15 +44,15 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
    }
 
    private int getLastVisibleItem(int[] lastVisibleItemPositions) {
-      int maxSize = 0;
+      int mMaxSize = 0;
       for (int i = 0; i < lastVisibleItemPositions.length; i++) {
          if (i == 0) {
-            maxSize = lastVisibleItemPositions[i];
-         } else if (lastVisibleItemPositions[i] > maxSize) {
-            maxSize = lastVisibleItemPositions[i];
+            mMaxSize = lastVisibleItemPositions[i];
+         } else if (lastVisibleItemPositions[i] > mMaxSize) {
+            mMaxSize = lastVisibleItemPositions[i];
          }
       }
-      return maxSize;
+      return mMaxSize;
    }
 
    // This happens many times a second during a scroll, so be wary of the code you place here.

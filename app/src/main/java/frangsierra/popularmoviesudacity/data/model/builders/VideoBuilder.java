@@ -4,6 +4,9 @@ import android.os.Parcel;
 
 import frangsierra.popularmoviesudacity.data.model.Video;
 
+/**
+ * Factory method for {@link Video} class.
+ */
 public class VideoBuilder {
    private String id;
    private String iso;

@@ -26,12 +26,11 @@ public final class NetworkUtils {
    private static final String API_PARAM_KEY = "api_key";
 
    /**
-    * Builds the URL used to talk to the weather server using a location. This location is based
-    * on the query capabilities of the weather provider that we are using.
+    * Builds the URL used to talk to the movie server using a filter and a number of pages
     *
     * @param filter The filter used for query the movies. It should belong to one of the described in
     *               {@link MovieSorting movie sorting } class
-    * @return The URL to use to query the weather server.
+    * @return The URL to use to query the movie server.
     */
    public static URL buildMovieUrl(@MovieSortingValue String filter, int pages) {
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
@@ -50,6 +49,13 @@ public final class NetworkUtils {
       return url;
    }
 
+   /**
+    * Builds the URL used to talk to the movie server using a movie Id and retrieve the associate
+    * reviews to the given movie.
+    *
+    * @param movieId movie id which this reviews belong.
+    * @return The URL to use to query the movie server.
+    */
    public static URL buildReviewUrl(long movieId) {
       String path = String.format("%s/reviews", movieId);
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
@@ -66,6 +72,13 @@ public final class NetworkUtils {
       return url;
    }
 
+   /**
+    * Builds the URL used to talk to the movie server using a movie Id and retrieve the associate
+    * reviews to the given movie.
+    *
+    * @param movieId movie id which this reviews belong.
+    * @return The URL to use to query the movie server.
+    */
    public static URL buildVideoUrl(long movieId) {
       String path = String.format("%s/videos", movieId);
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
