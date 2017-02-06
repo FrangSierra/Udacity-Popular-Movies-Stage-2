@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -23,6 +24,8 @@ import frangsierra.popularmoviesudacity.R;
 import frangsierra.popularmoviesudacity.core.ui.DaggerCleanActivity;
 import frangsierra.popularmoviesudacity.data.MovieSorting;
 import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.data.model.Review;
+import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
 import frangsierra.popularmoviesudacity.settings.SettingActivity;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
@@ -31,11 +34,14 @@ import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListene
 /**
  * Main application activity, it start the movie load when the application is launched.
  */
-public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
+public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
    implements MovieBrowserView, MovieGridAdapter.MovieAdapterListener,
    SharedPreferences.OnSharedPreferenceChangeListener {
 
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
+   public static final String VIDEO_EXTRA = "INTENT_VIDEO_DETAIL";
+   public static final String REVIEW_EXTRA = "INTENT_REVIEW_DETAIL";
+
    private static final int GRID_COLUMNS = 2;
 
    @Inject PopularMoviesRepository popularMoviesRepository;
@@ -108,9 +114,7 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
 
    @Override public void onMovieClick(int position) {
       Movie detailMovie = mGridAdapter.getMovieFromPosition(position);
-      Intent intent = new Intent(this, MovieDetailActivity.class);
-      intent.putExtra(MOVIE_EXTRA, detailMovie);
-      startActivity(intent);
+      getPresenter().loadMovieDetails(detailMovie);
    }
 
    @Override
@@ -183,6 +187,17 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
       mGridAdapter.updateMovieAsFavored(movieId, favored);
    }
 
+   @Override
+   public void startMovieDetailActivity(List<Video> videos, List<Review> reviews, Movie movie) {
+      Intent intent = new Intent(this, MovieDetailActivity.class);
+      intent.putExtra(MOVIE_EXTRA, movie);
+      if (videos.size() > 0)
+      intent.putParcelableArrayListExtra(VIDEO_EXTRA, new ArrayList<>(videos));
+      if (reviews.size() > 0)
+      intent.putParcelableArrayListExtra(REVIEW_EXTRA, new ArrayList<>(reviews));
+      startActivity(intent);
+   }
+
 }
 
 
@@ -195,4 +210,6 @@ interface MovieBrowserView {
    void showLoadingError();
 
    void updateMovieAsFavored(Long movieId, Boolean favored);
+
+   void startMovieDetailActivity(List<Video> videos, List<Review> reviews, Movie movie);
 }

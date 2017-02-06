@@ -8,6 +8,8 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+
 import javax.inject.Inject;
 
 import butterknife.BindView;
@@ -16,6 +18,8 @@ import butterknife.OnClick;
 import frangsierra.popularmoviesudacity.R;
 import frangsierra.popularmoviesudacity.core.ui.DaggerCleanActivity;
 import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.data.model.Review;
+import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.utils.MovieUtils;
 
 /**
@@ -31,6 +35,8 @@ public class MovieDetailActivity extends DaggerCleanActivity<MovieDetailPresente
    @BindView(R.id.movie_poster) ImageView mMoviePoster;
    @BindView(R.id.movie_favorite_button) ImageView mFavButton;
    private Movie mMovie;
+   private ArrayList<Video> mVideos;
+   private ArrayList<Review> mReviews;
 
    @Inject
    public MovieDetailActivity() {
@@ -42,8 +48,12 @@ public class MovieDetailActivity extends DaggerCleanActivity<MovieDetailPresente
       setContentView(R.layout.activity_detail);
       ButterKnife.bind(this, this);
       Intent intent = getIntent();
-      if (intent != null && intent.hasExtra(MovieBrowserActivity.MOVIE_EXTRA)) {
+      if (intent == null  || !intent.hasExtra(MovieBrowserActivity.MOVIE_EXTRA)) {
+         throw new NullPointerException("Movie can't be null");
+      }
          mMovie = intent.getParcelableExtra(MovieBrowserActivity.MOVIE_EXTRA);
+         mVideos = intent.getParcelableArrayListExtra(MovieBrowserActivity.VIDEO_EXTRA);
+         mReviews = intent.getParcelableArrayListExtra(MovieBrowserActivity.REVIEW_EXTRA);
          if (mMovie == null) return;
          mTitleText.setText(mMovie.getTitle());
          final String ratingText = getString(R.string.rating_text) + mMovie.getRating();
@@ -55,7 +65,6 @@ public class MovieDetailActivity extends DaggerCleanActivity<MovieDetailPresente
             .load(MovieUtils.buildPosterUri(mMovie.getPosterPath()))
             .into(mMoviePoster);
          setTitle(mMovie.getTitle());
-      }
    }
 
    @Override protected void onPostCreate(Bundle savedInstanceState) {

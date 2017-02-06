@@ -8,6 +8,8 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import frangsierra.popularmoviesudacity.data.model.Movie;
+import frangsierra.popularmoviesudacity.data.model.Review;
+import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
 import io.reactivex.Completable;
 import io.reactivex.Single;
@@ -29,8 +31,14 @@ public class MovieBrowserInteractorImpl implements MovieBrowserInteractor {
       return repository.retrieveMovies(filter, page);
    }
 
-   @Override public Completable addMovieToFavorites(Movie movie) {
-      return null;
+   @Override
+   public Single<List<Video>> retrieveVideosFromMovie(Long movieId) {
+      return repository.videos(movieId);
+   }
+
+   @Override
+   public Single<List<Review>> retrieveReviewsFromMovie(Long movieId) {
+      return repository.reviews(movieId);
    }
 
    @Override public Single<Set<Long>> getSavedMoviesId() {
@@ -46,7 +54,9 @@ interface MovieBrowserInteractor {
 
    Single<List<Movie>> retrieveMovies(String filter, int page);
 
-   Completable addMovieToFavorites(Movie movie);
+   Single<List<Video>> retrieveVideosFromMovie(Long movieId);
+
+   Single<List<Review>> retrieveReviewsFromMovie(Long movieId);
 
    Single<Set<Long>> getSavedMoviesId();
 
