@@ -59,7 +59,9 @@ public final class NetworkUtils {
    public static URL buildReviewUrl(long movieId) {
       String path = String.format("%s/reviews", movieId);
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
-         .appendPath(String.valueOf(path))
+         .appendEncodedPath(path)
+
+              .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
          .build();
 
       URL url = null;
@@ -82,7 +84,9 @@ public final class NetworkUtils {
    public static URL buildVideoUrl(long movieId) {
       String path = String.format("%s/videos", movieId);
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
-         .appendPath(String.valueOf(path))
+         .appendEncodedPath(path)
+
+              .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
          .build();
 
       URL url = null;

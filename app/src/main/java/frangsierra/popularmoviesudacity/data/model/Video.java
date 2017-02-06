@@ -8,18 +8,15 @@ import org.json.JSONObject;
 
 import frangsierra.popularmoviesudacity.data.model.builders.VideoBuilder;
 
-/**
- * Created by Durdin on 31/01/2017.
- */
 
 public class Video implements Parcelable {
    private static final String ID = "id";
    private static final String ISO = "iso_639_1";
-   private static final String KEY = "original_title";
-   private static final String NAME = "overview";
-   private static final String SITE = "poster_path";
-   private static final String SIZE = "vote_average";
-   private static final String TYPE = "vote_count";
+   private static final String KEY = "key";
+   private static final String NAME = "name";
+   private static final String SITE = "site";
+   private static final String SIZE = "size";
+   private static final String TYPE = "type";
    private String id;
    private String iso;
    private String key;
@@ -94,19 +91,21 @@ public class Video implements Parcelable {
       dest.writeString(this.type);
    }
 
-   protected Video(Parcel in) {
-      this.id = in.readString();
-      this.iso = in.readString();
-      this.key = in.readString();
-      this.name = in.readString();
-      this.site = in.readString();
-      this.size = in.readInt();
-      this.type = in.readString();
+   private static Video fromParcel(Parcel in) {
+      return new VideoBuilder()
+              .setId(in.readString())
+              .setIso(in.readString())
+              .setKey(in.readString())
+              .setName(in.readString())
+              .setSite(in.readString())
+              .setSize(in.readInt())
+              .setType(in.readString())
+              .createVideo();
    }
 
    public static final Creator<Video> CREATOR = new Creator<Video>() {
       public Video createFromParcel(Parcel source) {
-         return new VideoBuilder().setIn(source).createVideo();
+         return fromParcel(source);
       }
 
       public Video[] newArray(int size) {

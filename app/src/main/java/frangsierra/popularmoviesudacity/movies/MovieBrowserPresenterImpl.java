@@ -56,6 +56,7 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
         interactor.retrieveReviewsFromMovie(detailMovie.getId())
                 .zipWith(interactor.retrieveVideosFromMovie(detailMovie.getId()),
                         (BiFunction<List<Review>, List<Video>, Pair<List<Video>, List<Review>>>) (reviews, videos) -> new Pair(videos, reviews))
+                .subscribeOn(Schedulers.io())
                 .subscribe(listListPair -> {
                     getView().startMovieDetailActivity(listListPair.first, listListPair.second, detailMovie);
                 });
