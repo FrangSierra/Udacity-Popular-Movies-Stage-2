@@ -39,7 +39,7 @@ interface MovieBrowserView {
 
    void setMovies(List<Movie> movies);
 
-   void showLoadingError();
+   void showLoadingError(int messageId);
 
    void updateMovieAsFavored(Long movieId, Boolean favored);
 
@@ -106,6 +106,17 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
       });
       gridAdapter = new MovieGridAdapter(MovieBrowserActivity.this, MovieBrowserActivity.this);
       moviesRecyclerGridView.setAdapter(gridAdapter);
+   }
+
+   @Override protected void onResume() {
+      super.onResume();
+      //If a used unselect a movie as favorite, the list should be updated when he come back to the main scree
+      if (PreferenceManager
+         .getDefaultSharedPreferences(MovieBrowserActivity.this)
+         .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER).equals(SORT_BY_FAVORITE)) {
+         clearData();
+         startMovieLoading();
+      }
    }
 
    private void setupSharedPreferences() {
@@ -198,8 +209,15 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
       pagesLoaded++;
    }
 
-   @Override public void showLoadingError() {
+   @Override public void showLoadingError(int messageId) {
+      if (!isLoading) {
+         return;
+      }
+      isLoading = false;
+
       errorText.setVisibility(View.VISIBLE);
+      loadingProgressBar.setVisibility(View.INVISIBLE);
+      errorText.setText(getString(messageId));
    }
 
    @Override public void updateMovieAsFavored(Long movieId, Boolean favored) {

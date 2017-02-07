@@ -15,8 +15,6 @@
         android:id="@+id/error_text"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:padding="@dimen/padding_normal"
-        android:text="@string/loading_fail_error_text"
         android:textSize="@dimen/text_size_big"
         android:visibility="gone" />
 

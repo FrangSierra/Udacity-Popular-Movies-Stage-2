@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import frangsierra.popularmoviesudacity.R;
 import frangsierra.popularmoviesudacity.core.presentation.BasePresenter;
 import frangsierra.popularmoviesudacity.core.presentation.BasePresenterImpl;
 import frangsierra.popularmoviesudacity.data.MovieSorting;
@@ -15,6 +16,8 @@ import frangsierra.popularmoviesudacity.data.model.Video;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.BiFunction;
 import io.reactivex.schedulers.Schedulers;
+
+import static frangsierra.popularmoviesudacity.data.MovieSorting.SORT_BY_FAVORITE;
 
 interface MovieBrowserPresenter extends BasePresenter<MovieBrowserView> {
 
@@ -47,13 +50,14 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
          .subscribeOn(Schedulers.io())
          .observeOn(AndroidSchedulers.mainThread())
          .subscribe(movies -> {
-            if (movies != null) {
+            if (movies != null && movies.size() > 0) {
                getView().setMovies(movies);
-            } else {
-               getView().showLoadingError();
+            } else if (filter.equals(SORT_BY_FAVORITE)) {
+               getView().showLoadingError(R.string.favorite_empty_error_text);
+               return;
             }
             getView().disableLoadingControls();
-         });
+         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text));
    }
 
    @Override
@@ -64,7 +68,7 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
          .subscribeOn(Schedulers.io())
          .subscribe(listListPair -> {
             getView().startMovieDetailActivity(listListPair.first, listListPair.second, detailMovie);
-         }, throwable -> getView().showLoadingError());
+         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text));
    }
 
    @Override
