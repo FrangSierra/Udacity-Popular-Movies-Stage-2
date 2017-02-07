@@ -4,6 +4,7 @@ package frangsierra.popularmoviesudacity.movies;
 import dagger.Component;
 import dagger.Module;
 import dagger.Provides;
+import frangsierra.popularmoviesudacity.core.ActivityModule;
 import frangsierra.popularmoviesudacity.core.AppComponent;
 import frangsierra.popularmoviesudacity.core.scopes.ViewScope;
 
@@ -12,6 +13,7 @@ import frangsierra.popularmoviesudacity.core.scopes.ViewScope;
    modules = {
       MoviesComponent.MovieBrowserModule.class,
       MoviesComponent.MovieDetailModule.class,
+      ActivityModule.class,
    },
    dependencies = AppComponent.class
 )

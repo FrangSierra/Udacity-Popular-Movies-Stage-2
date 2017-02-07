@@ -53,6 +53,7 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
    implements MovieBrowserView, MovieGridAdapter.MovieAdapterListener,
    SharedPreferences.OnSharedPreferenceChangeListener {
 
+   public static final String BUNDLE_EXTRA = "BUNDLE_DETAIL";
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
    public static final String VIDEO_EXTRA = "INTENT_VIDEO_DETAIL";
    public static final String REVIEW_EXTRA = "INTENT_REVIEW_DETAIL";
