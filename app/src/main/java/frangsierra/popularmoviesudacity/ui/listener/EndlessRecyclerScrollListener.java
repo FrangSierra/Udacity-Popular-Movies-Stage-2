@@ -15,6 +15,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
  * @see <a href="https://gist.github.com/nesquena/d09dc68ff07e845cc622"/>
  */
 public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrollListener {
+   RecyclerView.LayoutManager mLayoutManager;
    // The minimum amount of items to have below your current scroll position
    // before loading more.
    private int visibleThreshold = 10;
@@ -24,10 +25,9 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
    private int previousTotalItemCount = 0;
    // True if we are still waiting for the last set of data to load.
    private boolean loading = true;
+
    // Sets the starting page index
    private int startingPageIndex = 0;
-
-   RecyclerView.LayoutManager mLayoutManager;
 
    public EndlessRecyclerScrollListener(LinearLayoutManager layoutManager) {
       this.mLayoutManager = layoutManager;
@@ -101,14 +101,18 @@ public abstract class EndlessRecyclerScrollListener extends RecyclerView.OnScrol
       }
    }
 
-   // Call this method whenever performing new searches
+   /**
+    * Call this method whenever performing new searches.
+    */
    public void resetState() {
       this.currentPage = this.startingPageIndex;
       this.previousTotalItemCount = 0;
       this.loading = true;
    }
 
-   // Defines the process for actually loading more data based on page
+   /**
+    * Defines the process for actually loading more data based on page.
+    */
    public abstract void onLoadMore(int page, int totalItemsCount, RecyclerView view);
 
 }

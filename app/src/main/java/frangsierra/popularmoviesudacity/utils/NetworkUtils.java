@@ -26,7 +26,7 @@ public final class NetworkUtils {
    private static final String API_PARAM_KEY = "api_key";
 
    /**
-    * Builds the URL used to talk to the movie server using a filter and a number of pages
+    * Builds the URL used to talk to the movie server using a filter and a number of pages.
     *
     * @param filter The filter used for query the movies. It should belong to one of the described in
     *               {@link MovieSorting movie sorting } class
@@ -61,7 +61,7 @@ public final class NetworkUtils {
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
          .appendEncodedPath(path)
 
-              .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
+         .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
          .build();
 
       URL url = null;
@@ -86,7 +86,7 @@ public final class NetworkUtils {
       Uri builtUri = Uri.parse(API_BASE_URL).buildUpon()
          .appendEncodedPath(path)
 
-              .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
+         .appendQueryParameter(API_PARAM_KEY, BuildConfig.MOVIES_API_KEY)
          .build();
 
       URL url = null;

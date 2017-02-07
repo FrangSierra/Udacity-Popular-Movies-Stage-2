@@ -11,4 +11,7 @@
     <string name="settings_title">Settings</string>
     <string name="category_general_settings">General Settings</string>
     <string name="category_general_settings_key">general</string>
+    <string name="videos_title_text">Videos</string>
+    <string name="reviews_title_text">Reviews</string>
+    <string name="overview_title_text">Movie overview</string>
 </resources>

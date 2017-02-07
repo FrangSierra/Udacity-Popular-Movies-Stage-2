@@ -31,10 +31,23 @@ import frangsierra.popularmoviesudacity.settings.SettingActivity;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
 import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListener;
 
+interface MovieBrowserView {
+
+   void disableLoadingControls();
+
+   void setMovies(List<Movie> movies);
+
+   void showLoadingError();
+
+   void updateMovieAsFavored(Long movieId, Boolean favored);
+
+   void startMovieDetailActivity(List<Video> videos, List<Review> reviews, Movie movie);
+}
+
 /**
  * Main application activity, it start the movie load when the application is launched.
  */
-public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
+public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
    implements MovieBrowserView, MovieGridAdapter.MovieAdapterListener,
    SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -45,13 +58,13 @@ public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPrese
    private static final int GRID_COLUMNS = 2;
 
    @Inject PopularMoviesRepository popularMoviesRepository;
-   @BindView(R.id.movies_grid_view) RecyclerView mMoviesRecyclerGridView;
-   @BindView(R.id.loading_progress_bar) ProgressBar mLoadingProgressBar;
-   @BindView(R.id.error_text) TextView mErrorText;
+   @BindView(R.id.movies_grid_view) RecyclerView moviesRecyclerGridView;
+   @BindView(R.id.loading_progress_bar) ProgressBar loadingProgressBar;
+   @BindView(R.id.error_text) TextView errorText;
 
-   private MovieGridAdapter mGridAdapter;
-   private int mPagesLoaded = 0;
-   private boolean mIsLoading = false;
+   private MovieGridAdapter gridAdapter;
+   private int pagesLoaded = 0;
+   private boolean isLoading = false;
 
    @Inject
    public MovieBrowserActivity() {
@@ -79,14 +92,14 @@ public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPrese
     */
    private void initializeRecycler() {
       GridLayoutManager gridLayoutManager = new GridLayoutManager(this, GRID_COLUMNS);
-      mMoviesRecyclerGridView.setLayoutManager(gridLayoutManager);
-      mMoviesRecyclerGridView.addOnScrollListener(new EndlessRecyclerScrollListener(gridLayoutManager) {
+      moviesRecyclerGridView.setLayoutManager(gridLayoutManager);
+      moviesRecyclerGridView.addOnScrollListener(new EndlessRecyclerScrollListener(gridLayoutManager) {
          @Override public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
             startMovieLoading();
          }
       });
-      mGridAdapter = new MovieGridAdapter(MovieBrowserActivity.this, MovieBrowserActivity.this);
-      mMoviesRecyclerGridView.setAdapter(mGridAdapter);
+      gridAdapter = new MovieGridAdapter(MovieBrowserActivity.this, MovieBrowserActivity.this);
+      moviesRecyclerGridView.setAdapter(gridAdapter);
    }
 
    private void setupSharedPreferences() {
@@ -113,7 +126,7 @@ public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPrese
    }
 
    @Override public void onMovieClick(int position) {
-      Movie detailMovie = mGridAdapter.getMovieFromPosition(position);
+      Movie detailMovie = gridAdapter.getMovieFromPosition(position);
       getPresenter().loadMovieDetails(detailMovie);
    }
 
@@ -128,20 +141,20 @@ public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPrese
     * Start the data loading and hide the views when the load is been processed.
     */
    public void startMovieLoading() {
-      if (mIsLoading) {
+      if (isLoading) {
          return;
       }
 
-      mLoadingProgressBar.setVisibility(View.VISIBLE);
-      mMoviesRecyclerGridView.setVisibility(View.INVISIBLE);
+      loadingProgressBar.setVisibility(View.VISIBLE);
+      moviesRecyclerGridView.setVisibility(View.INVISIBLE);
 
-      mIsLoading = true;
+      isLoading = true;
 
       final @MovieSorting.MovieSortingValue String filter = PreferenceManager
          .getDefaultSharedPreferences(MovieBrowserActivity.this)
          .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER);
 
-      getPresenter().loadMovieData(filter, mPagesLoaded + 1);
+      getPresenter().loadMovieData(filter, pagesLoaded + 1);
    }
 
    @Override
@@ -156,35 +169,35 @@ public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPrese
     * Clear the adapter and reset the page index to 0.
     */
    private void clearData() {
-      mPagesLoaded = 0;
-      mGridAdapter.clear();
+      pagesLoaded = 0;
+      gridAdapter.clear();
    }
 
    /**
     * Make the needed calls and show the right views when the load as finished.
     */
    public void disableLoadingControls() {
-      if (!mIsLoading) {
+      if (!isLoading) {
          return;
       }
 
-      mIsLoading = false;
-      mLoadingProgressBar.setVisibility(View.INVISIBLE);
-      mMoviesRecyclerGridView.setVisibility(View.VISIBLE);
-      mErrorText.setVisibility(View.INVISIBLE);
+      isLoading = false;
+      loadingProgressBar.setVisibility(View.INVISIBLE);
+      moviesRecyclerGridView.setVisibility(View.VISIBLE);
+      errorText.setVisibility(View.INVISIBLE);
    }
 
    @Override public void setMovies(List<Movie> movies) {
-      mGridAdapter.addMovies(movies);
-      mPagesLoaded++;
+      gridAdapter.addMovies(movies);
+      pagesLoaded++;
    }
 
    @Override public void showLoadingError() {
-      mErrorText.setVisibility(View.VISIBLE);
+      errorText.setVisibility(View.VISIBLE);
    }
 
    @Override public void updateMovieAsFavored(Long movieId, Boolean favored) {
-      mGridAdapter.updateMovieAsFavored(movieId, favored);
+      gridAdapter.updateMovieAsFavored(movieId, favored);
    }
 
    @Override
@@ -192,24 +205,10 @@ public class  MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPrese
       Intent intent = new Intent(this, MovieDetailActivity.class);
       intent.putExtra(MOVIE_EXTRA, movie);
       if (videos.size() > 0)
-      intent.putParcelableArrayListExtra(VIDEO_EXTRA, new ArrayList<>(videos));
+         intent.putParcelableArrayListExtra(VIDEO_EXTRA, new ArrayList<>(videos));
       if (reviews.size() > 0)
-      intent.putParcelableArrayListExtra(REVIEW_EXTRA, new ArrayList<>(reviews));
+         intent.putParcelableArrayListExtra(REVIEW_EXTRA, new ArrayList<>(reviews));
       startActivity(intent);
    }
 
-}
-
-
-interface MovieBrowserView {
-
-   void disableLoadingControls();
-
-   void setMovies(List<Movie> movies);
-
-   void showLoadingError();
-
-   void updateMovieAsFavored(Long movieId, Boolean favored);
-
-   void startMovieDetailActivity(List<Video> videos, List<Review> reviews, Movie movie);
 }

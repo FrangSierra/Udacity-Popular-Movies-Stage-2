@@ -19,21 +19,21 @@ import static frangsierra.popularmoviesudacity.utils.MovieUtils.buildPosterUri;
  * {@link Movie} from the adapter.
  */
 class MovieViewHolder extends RecyclerView.ViewHolder {
-   private final View mView;
-   private ImageView mMovieThumbnail;
+   private final View view;
+   private ImageView movieThumbnail;
 
    MovieViewHolder(View itemView) {
       super(itemView);
-      mView = itemView;
-      mMovieThumbnail = (ImageView) itemView.findViewById(R.id.movie_thumbnail_image);
+      view = itemView;
+      movieThumbnail = (ImageView) itemView.findViewById(R.id.movie_thumbnail_image);
    }
 
    /**
-    * Set the current {@link #mMovieThumbnail} with a given url using {@link Picasso}.
+    * Set the current {@link #movieThumbnail} with a given url using {@link Picasso}.
     */
    void setImageThumbnail(String url, final Context context) {
       Uri uri = buildPosterUri(url);
-      Picasso.with(context).load(uri).into(mMovieThumbnail);
+      Picasso.with(context).load(uri).into(movieThumbnail);
    }
 
    /**
@@ -41,7 +41,7 @@ class MovieViewHolder extends RecyclerView.ViewHolder {
     * position in the {@link MovieGridAdapter}.
     */
    void setOnClickListener(final MovieGridAdapter.MovieAdapterListener mOnMovieClickListener,
-                                  final int position) {
-      mView.setOnClickListener(v -> mOnMovieClickListener.onMovieClick(position));
+                           final int position) {
+      view.setOnClickListener(v -> mOnMovieClickListener.onMovieClick(position));
    }
 }

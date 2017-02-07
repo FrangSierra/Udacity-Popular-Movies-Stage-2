@@ -19,12 +19,12 @@ import frangsierra.popularmoviesudacity.movies.MovieBrowserActivity;
  * {@link Movie} objects and a {@link MovieViewHolder}.
  */
 public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
-   private final List<Movie> mMovieList = new ArrayList<>();
-   private MovieAdapterListener mOnMovieClickListener;
+   private final List<Movie> movieList = new ArrayList<>();
+   private MovieAdapterListener onMovieClickListener;
    private Context mContext;
 
    public MovieGridAdapter(MovieAdapterListener onMovieClick, Context context) {
-      this.mOnMovieClickListener = onMovieClick;
+      this.onMovieClickListener = onMovieClick;
       mContext = context;
    }
 
@@ -34,13 +34,13 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
    }
 
    @Override public void onBindViewHolder(MovieViewHolder holder, int position) {
-      final Movie movie = mMovieList.get(position);
-      holder.setOnClickListener(mOnMovieClickListener, position);
+      final Movie movie = movieList.get(position);
+      holder.setOnClickListener(onMovieClickListener, position);
       holder.setImageThumbnail(movie.getPosterPath(), mContext);
    }
 
    @Override public int getItemCount() {
-      return mMovieList.size();
+      return movieList.size();
    }
 
    /**
@@ -48,7 +48,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     */
    public void clear() {
       int size = getItemCount();
-      mMovieList.clear();
+      movieList.clear();
       notifyItemRangeRemoved(0, size);
    }
 
@@ -56,15 +56,15 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     * Return the movie in the list situated in the given position.
     */
    public Movie getMovieFromPosition(int position) {
-      return mMovieList.get(position);
+      return movieList.get(position);
    }
 
    /**
     * Go through the movies on the list to update one of them with his new favored value.
     */
    public void updateMovieAsFavored(Long movieId, boolean fav) {
-      for (int i = 0; i < mMovieList.size(); i++) {
-         final Movie movie = mMovieList.get(i);
+      for (int i = 0; i < movieList.size(); i++) {
+         final Movie movie = movieList.get(i);
          if (movie.getId() != movieId) continue;
          movie.setFavMovie(fav);
          notifyItemChanged(i);
@@ -77,7 +77,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
     * Add a list of {@link Movie movies} to the current adapter list.
     */
    public void addMovies(List<Movie> movies) {
-      mMovieList.addAll(movies);
+      movieList.addAll(movies);
       notifyDataSetChanged();
    }
 

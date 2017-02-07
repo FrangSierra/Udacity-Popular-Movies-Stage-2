@@ -49,6 +49,7 @@
                     android:layout_width="@dimen/detail_activity_poster_width" />
 
                 <ImageButton
+                    android:background="@android:color/transparent"
                     android:id="@+id/movie_favorite_button"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
@@ -58,7 +59,6 @@
                     android:layout_width="64dp"
                     android:padding="@dimen/padding_small"
                     android:scaleType="centerInside"
-                    android:background="@android:color/transparent"
                     android:src="@drawable/selector_fav_button" />
 
                 <LinearLayout
@@ -100,11 +100,89 @@
                 android:layout_width="match_parent" />
 
             <TextView
+                android:id="@+id/movie_overview_title"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_normal"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:text="@string/overview_title_text" />
+
+            <TextView
                 android:id="@+id/movie_overview"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:padding="@dimen/padding_normal"
                 android:textSize="@dimen/text_size_medium" />
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/video_container"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <View
+                    android:background="@color/colorAccent"
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent" />
+
+                <TextView
+                    android:id="@+id/movie_videos_title"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_width="match_parent"
+                    android:text="@string/videos_title_text"
+                    android:textSize="@dimen/text_size_large" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/videos_list"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_width="match_parent" />
+
+            </LinearLayout>
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/review_container"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <View
+                    android:background="@color/colorAccent"
+                    android:layout_height="1dp"
+                    android:layout_width="match_parent" />
+
+                <TextView
+                    android:id="@+id/movie_reviews_title"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_width="match_parent"
+                    android:text="@string/reviews_title_text"
+                    android:textSize="@dimen/text_size_large" />
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/reviews_list"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_normal"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_width="match_parent" />
+            </LinearLayout>
         </LinearLayout>
     </ScrollView>
 

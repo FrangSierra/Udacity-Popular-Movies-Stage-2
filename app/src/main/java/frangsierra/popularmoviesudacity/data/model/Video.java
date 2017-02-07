@@ -9,7 +9,22 @@ import org.json.JSONObject;
 import frangsierra.popularmoviesudacity.data.model.builders.VideoBuilder;
 
 
+/**
+ * POJO object used to work with videos retrieved from the JSON file.
+ */
 public class Video implements Parcelable {
+
+   public static final String YOUTUBE = "YouTube";
+   public static final String TRAILER = "Trailer";
+   public static final Creator<Video> CREATOR = new Creator<Video>() {
+      public Video createFromParcel(Parcel source) {
+         return fromParcel(source);
+      }
+
+      public Video[] newArray(int size) {
+         return new Video[size];
+      }
+   };
    private static final String ID = "id";
    private static final String ISO = "iso_639_1";
    private static final String KEY = "key";
@@ -33,6 +48,32 @@ public class Video implements Parcelable {
       this.site = site;
       this.size = size;
       this.type = type;
+   }
+
+   /**
+    * Build a {@link Video} object from a given {@link JSONObject}.
+    */
+   public static Video fromJson(JSONObject jsonObject) throws JSONException {
+      return new VideoBuilder().setId(jsonObject.getString(ID))
+         .setIso(jsonObject.getString(ISO))
+         .setKey(jsonObject.getString(KEY))
+         .setName(jsonObject.getString(NAME))
+         .setSite(jsonObject.getString(SITE))
+         .setSize(jsonObject.getInt(SIZE))
+         .setType(jsonObject.getString(TYPE))
+         .createVideo();
+   }
+
+   private static Video fromParcel(Parcel in) {
+      return new VideoBuilder()
+         .setId(in.readString())
+         .setIso(in.readString())
+         .setKey(in.readString())
+         .setName(in.readString())
+         .setSite(in.readString())
+         .setSize(in.readInt())
+         .setType(in.readString())
+         .createVideo();
    }
 
    public String getId() {
@@ -63,20 +104,6 @@ public class Video implements Parcelable {
       return type;
    }
 
-   /**
-    * Build a {@link Video} object from a given {@link JSONObject}.
-    */
-   public static Video fromJson(JSONObject jsonObject) throws JSONException {
-      return new VideoBuilder().setId(jsonObject.getString(ID))
-         .setIso(jsonObject.getString(ISO))
-         .setKey(jsonObject.getString(KEY))
-         .setName(jsonObject.getString(NAME))
-         .setSite(jsonObject.getString(SITE))
-         .setSize(jsonObject.getInt(SIZE))
-         .setType(jsonObject.getString(TYPE))
-         .createVideo();
-   }
-
    @Override public int describeContents() {
       return 0;
    }
@@ -90,27 +117,5 @@ public class Video implements Parcelable {
       dest.writeInt(this.size);
       dest.writeString(this.type);
    }
-
-   private static Video fromParcel(Parcel in) {
-      return new VideoBuilder()
-              .setId(in.readString())
-              .setIso(in.readString())
-              .setKey(in.readString())
-              .setName(in.readString())
-              .setSite(in.readString())
-              .setSize(in.readInt())
-              .setType(in.readString())
-              .createVideo();
-   }
-
-   public static final Creator<Video> CREATOR = new Creator<Video>() {
-      public Video createFromParcel(Parcel source) {
-         return fromParcel(source);
-      }
-
-      public Video[] newArray(int size) {
-         return new Video[size];
-      }
-   };
 
 }

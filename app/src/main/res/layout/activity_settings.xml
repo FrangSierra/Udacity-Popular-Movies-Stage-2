@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- COMPLETED (7) Set the root layout of activity_settings to our newly created SettingsFragment
+<?xml version="1.0" encoding="utf-8"?><!-- COMPLETED (7) Set the root layout of activity_settings to our newly created SettingsFragment
 and remove the padding.-->
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_settings"
-    android:name="frangsierra.popularmoviesudacity.settings.SettingFragment"
+    android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"/>
+    android:name="frangsierra.popularmoviesudacity.settings.SettingFragment" />

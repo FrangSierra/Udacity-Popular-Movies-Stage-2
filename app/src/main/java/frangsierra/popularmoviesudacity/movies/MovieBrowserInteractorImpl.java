@@ -11,9 +11,22 @@ import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
-import io.reactivex.Completable;
 import io.reactivex.Single;
 import io.reactivex.processors.PublishProcessor;
+
+interface MovieBrowserInteractor {
+
+   Single<List<Movie>> retrieveMovies(String filter, int page);
+
+   Single<List<Video>> retrieveVideosFromMovie(Long movieId);
+
+   Single<List<Review>> retrieveReviewsFromMovie(Long movieId);
+
+   Single<Set<Long>> getSavedMoviesId();
+
+   PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor();
+
+}
 
 /**
  * Interactor class for {@link MovieBrowserActivity}. It is in charge of communicate the repository with
@@ -48,18 +61,4 @@ public class MovieBrowserInteractorImpl implements MovieBrowserInteractor {
    @Override public PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor() {
       return repository.getFavoredProcessor();
    }
-}
-
-interface MovieBrowserInteractor {
-
-   Single<List<Movie>> retrieveMovies(String filter, int page);
-
-   Single<List<Video>> retrieveVideosFromMovie(Long movieId);
-
-   Single<List<Review>> retrieveReviewsFromMovie(Long movieId);
-
-   Single<Set<Long>> getSavedMoviesId();
-
-   PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor();
-
 }

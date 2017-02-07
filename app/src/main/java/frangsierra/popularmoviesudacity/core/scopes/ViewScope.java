@@ -8,6 +8,7 @@ import javax.inject.Scope;
 
 @Scope
 @Documented
+@SuppressWarnings("javadoctype")
 @Retention(value = RetentionPolicy.RUNTIME)
 public @interface ViewScope {
 }

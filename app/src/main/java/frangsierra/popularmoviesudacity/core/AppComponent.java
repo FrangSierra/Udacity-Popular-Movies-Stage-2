@@ -13,7 +13,7 @@ import frangsierra.popularmoviesudacity.data.repository.RepositoryModule;
    modules = {
       App.AppModule.class,
       RepositoryModule.class,
-}
+   }
 )
 
 public interface AppComponent {

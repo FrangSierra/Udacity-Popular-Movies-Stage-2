@@ -8,82 +8,83 @@ import org.json.JSONObject;
 
 import frangsierra.popularmoviesudacity.data.model.builders.ReviewBuilder;
 
-
+/**
+ * POJO object used to work with reviews retrieved from the JSON file.
+ */
 public class Review implements Parcelable {
-    private static final String ID = "id";
-    private static final String AUTHOR = "author";
-    private static final String CONTENT = "content";
-    private static final String URL = "url";
-    private String id;
-    private String author;
-    private String content;
-    private String url;
+   public static final Creator<Review> CREATOR = new Creator<Review>() {
+      public Review createFromParcel(Parcel source) {
+         return fromParcel(source);
+      }
 
-    public Review(String id, String author, String content, String url) {
-        this.id = id;
-        this.author = author;
-        this.content = content;
-        this.url = url;
-    }
+      public Review[] newArray(int size) {
+         return new Review[size];
+      }
+   };
+   private static final String ID = "id";
+   private static final String AUTHOR = "author";
+   private static final String CONTENT = "content";
+   private static final String URL = "url";
+   private String id;
+   private String author;
+   private String content;
+   private String url;
 
-    public String getId() {
-        return id;
-    }
+   public Review(String id, String author, String content, String url) {
+      this.id = id;
+      this.author = author;
+      this.content = content;
+      this.url = url;
+   }
 
-    public String getAuthor() {
-        return author;
-    }
+   /**
+    * Build a {@link Video} object from a given {@link JSONObject}.
+    */
+   public static Review fromJson(JSONObject jsonObject) throws JSONException {
+      return new ReviewBuilder()
+         .setId(jsonObject.getString(ID))
+         .setAuthor(jsonObject.getString(AUTHOR))
+         .setContent(jsonObject.getString(CONTENT))
+         .setUrl(jsonObject.getString(URL))
+         .createReview();
+   }
 
-    public String getContent() {
-        return content;
-    }
+   private static Review fromParcel(Parcel in) {
+      return new ReviewBuilder()
+         .setId(in.readString())
+         .setAuthor(in.readString())
+         .setContent(in.readString())
+         .setUrl(in.readString())
+         .createReview();
+   }
 
-    public String getUrl() {
-        return url;
-    }
+   public String getId() {
+      return id;
+   }
 
-    /**
-     * Build a {@link Video} object from a given {@link JSONObject}.
-     */
-    public static Review fromJson(JSONObject jsonObject) throws JSONException {
-        return new ReviewBuilder()
-                .setId(jsonObject.getString(ID))
-                .setAuthor(jsonObject.getString(AUTHOR))
-                .setContent(jsonObject.getString(CONTENT))
-                .setUrl(jsonObject.getString(URL))
-                .createReview();
-    }
+   public String getAuthor() {
+      return author;
+   }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+   public String getContent() {
+      return content;
+   }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.id);
-        dest.writeString(this.author);
-        dest.writeString(this.content);
-        dest.writeString(this.url);
-    }
+   public String getUrl() {
+      return url;
+   }
 
-    private static Review fromParcel(Parcel in) {
-        return new ReviewBuilder()
-                .setId(in.readString())
-                .setAuthor(in.readString())
-                .setContent(in.readString())
-                .setUrl(in.readString())
-                .createReview();
-    }
+   @Override
+   public int describeContents() {
+      return 0;
+   }
 
-    public static final Creator<Review> CREATOR = new Creator<Review>() {
-        public Review createFromParcel(Parcel source) {
-            return fromParcel(source);
-        }
-
-        public Review[] newArray(int size) {
-            return new Review[size];
-        }
-    };
+   @Override
+   public void writeToParcel(Parcel dest, int flags) {
+      dest.writeString(this.id);
+      dest.writeString(this.author);
+      dest.writeString(this.content);
+      dest.writeString(this.url);
+   }
 
 }

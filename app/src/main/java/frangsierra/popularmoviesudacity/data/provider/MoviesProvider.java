@@ -22,14 +22,12 @@ import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContra
  */
 public final class MoviesProvider extends ContentProvider {
 
-   private static final UriMatcher sUriMatcher = buildUriMatcher();
-
    private static final int MOVIES = 100;
    private static final int MOVIES_ID = 101;
-
    private static final String MOVIES_PATH = "movies";
    private static final String MOVIES_ID_PATH = "movies/*";
-   private MovieDbHelper mHelper;
+   private static final UriMatcher URI_MATCHER = buildUriMatcher();
+   private MovieDbHelper movieHelper;
 
    @Inject public MoviesProvider() {
    }
@@ -45,14 +43,14 @@ public final class MoviesProvider extends ContentProvider {
    }
 
    @Override public boolean onCreate() {
-      mHelper = new MovieDbHelper(getContext());
+      movieHelper = new MovieDbHelper(getContext());
       return true;
    }
 
    @Nullable @Override
    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-      final SQLiteDatabase db = mHelper.getWritableDatabase();
-      final int match = sUriMatcher.match(uri);
+      final SQLiteDatabase db = movieHelper.getWritableDatabase();
+      final int match = URI_MATCHER.match(uri);
 
       Cursor query;
       switch (match) {
@@ -80,8 +78,8 @@ public final class MoviesProvider extends ContentProvider {
    }
 
    @Nullable @Override public Uri insert(Uri uri, ContentValues values) {
-      final SQLiteDatabase db = mHelper.getWritableDatabase();
-      final int match = sUriMatcher.match(uri);
+      final SQLiteDatabase db = movieHelper.getWritableDatabase();
+      final int match = URI_MATCHER.match(uri);
       Uri insertUri;
       switch (match) {
          case MOVIES: {
@@ -103,13 +101,13 @@ public final class MoviesProvider extends ContentProvider {
 
    @Override public int delete(Uri uri, String selection, String[] selectionArgs) {
       if (uri.equals(BASE_CONTENT_URI)) {
-         mHelper.close();
-         mHelper.deleteDatabase();
-         mHelper = new MovieDbHelper(getContext());
+         movieHelper.close();
+         movieHelper.deleteDatabase();
+         movieHelper = new MovieDbHelper(getContext());
          return 1;
       }
-      final SQLiteDatabase db = mHelper.getWritableDatabase();
-      final int match = sUriMatcher.match(uri);
+      final SQLiteDatabase db = movieHelper.getWritableDatabase();
+      final int match = URI_MATCHER.match(uri);
       int retrieveValue;
       switch (match) {
          case MOVIES: {
@@ -128,8 +126,8 @@ public final class MoviesProvider extends ContentProvider {
 
    @Override
    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-      final SQLiteDatabase db = mHelper.getWritableDatabase();
-      final int match = sUriMatcher.match(uri);
+      final SQLiteDatabase db = movieHelper.getWritableDatabase();
+      final int match = URI_MATCHER.match(uri);
       int retrieveValue;
       switch (match) {
          case MOVIES: {

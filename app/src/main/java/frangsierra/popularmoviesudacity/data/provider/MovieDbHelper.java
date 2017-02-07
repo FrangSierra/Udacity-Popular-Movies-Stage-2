@@ -9,17 +9,16 @@ import static frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContra
 
 
 /**
- * Created by Durdin on 05/02/2017.
+ * Database helper used to work together with {@link MovieDatabaseContract}
  */
-
-public class MovieDbHelper extends SQLiteOpenHelper {
+class MovieDbHelper extends SQLiteOpenHelper {
    private static final String DB_NAME = "movies.db";
    private static final int DB_VERSION = 1;
-   private final Context mContext;
+   private final Context context;
 
-   public MovieDbHelper(Context context) {
+   MovieDbHelper(Context context) {
       super(context, DB_NAME, null, DB_VERSION);
-      mContext = context;
+      this.context = context;
    }
 
    @Override public void onCreate(SQLiteDatabase db) {
@@ -43,7 +42,10 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
    }
 
-   public void deleteDatabase() {
-      mContext.deleteDatabase(DB_NAME);
+   /**
+    * Delete the whole database.
+    */
+   void deleteDatabase() {
+      context.deleteDatabase(DB_NAME);
    }
 }

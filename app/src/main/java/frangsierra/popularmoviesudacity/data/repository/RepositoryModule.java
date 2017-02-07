@@ -1,6 +1,6 @@
 package frangsierra.popularmoviesudacity.data.repository;
 
-   import android.content.ContentResolver;
+import android.content.ContentResolver;
 
 import dagger.Module;
 import dagger.Provides;

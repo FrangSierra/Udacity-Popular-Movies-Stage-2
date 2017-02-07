@@ -9,6 +9,13 @@ import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
 import io.reactivex.Completable;
 import io.reactivex.processors.PublishProcessor;
 
+interface MovieDetailInteractor {
+
+   PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor();
+
+   Completable setMovieFavored(Movie movie, boolean favored);
+}
+
 /**
  * Interactor class for {@link MovieDetailActivity}. It is in charge of communicate the repository with
  * the presenter.
@@ -26,13 +33,6 @@ public class MovieDetailInteractorImpl implements MovieDetailInteractor {
 
    @Override public Completable setMovieFavored(Movie movie, boolean favored) {
       movie.setFavMovie(favored);
-      return  favored ? repository.saveMovie(movie) : repository.deleteMovie(movie);
+      return favored ? repository.saveMovie(movie) : repository.deleteMovie(movie);
    }
-}
-
-interface MovieDetailInteractor {
-
-   PublishProcessor<Pair<Long, Boolean>> getFavoredProcessor();
-
-   Completable setMovieFavored(Movie movie, boolean favored);
 }

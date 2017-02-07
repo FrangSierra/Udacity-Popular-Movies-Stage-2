@@ -13,6 +13,17 @@ import frangsierra.popularmoviesudacity.data.model.builders.MovieBuilder;
  */
 public class Movie implements Parcelable {
 
+   public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+      @Override
+      public Movie[] newArray(int size) {
+         return new Movie[size];
+      }
+
+      @Override
+      public Movie createFromParcel(Parcel source) {
+         return fromParcel(source);
+      }
+   };
    private static final String ID = "id";
    private static final String TITLE = "title";
    private static final String ORIGINAL_TITLE = "original_title";
@@ -37,8 +48,9 @@ public class Movie implements Parcelable {
    private final String language;
    private final String backdrop;
    private final boolean video;
-   boolean isFavMovie = false;
+   private boolean isFavMovie = false;
 
+   @SuppressWarnings("ParameterNumber")
    public Movie(long id, String title, String originalTitle, String overview, String posterPath,
                 double voteAverage, long voteCount, String releaseDate, boolean adultsMovie,
                 String language, String backdrop, boolean video, boolean isFavMovie) {
@@ -55,6 +67,44 @@ public class Movie implements Parcelable {
       this.backdrop = backdrop;
       this.video = video;
       this.isFavMovie = isFavMovie;
+   }
+
+   /**
+    * Build a {@link Movie} object from a given {@link JSONObject}.
+    */
+   public static Movie fromJson(JSONObject jsonObject) throws JSONException {
+      return new MovieBuilder()
+         .setId(jsonObject.getLong(ID))
+         .setTitle(jsonObject.getString(TITLE))
+         .setOriginalTitle(jsonObject.getString(ORIGINAL_TITLE))
+         .setOverview(jsonObject.getString(OVERVIEW))
+         .setPosterPath(jsonObject.getString(POSTER_PATH))
+         .setVoteAverage(jsonObject.getDouble(VOTE_AVERAGE))
+         .setVoteCount(jsonObject.getLong(VOTE_COUNT))
+         .setReleaseDate(jsonObject.getString(RELEASE_DATE))
+         .setAdultsMovie(jsonObject.getBoolean(ADULTS))
+         .setLanguage(jsonObject.getString(LANGUAGE))
+         .setBackdrop(jsonObject.getString(BACKDROP))
+         .setVideo(jsonObject.getBoolean(VIDEO))
+         .createMovie();
+   }
+
+   private static Movie fromParcel(Parcel in) {
+      return new MovieBuilder()
+         .setId(in.readLong())
+         .setTitle(in.readString())
+         .setOriginalTitle(in.readString())
+         .setOverview(in.readString())
+         .setPosterPath(in.readString())
+         .setVoteAverage(in.readDouble())
+         .setVoteCount(in.readLong())
+         .setReleaseDate(in.readString())
+         .setAdultsMovie(in.readByte() != 0)
+         .setLanguage(in.readString())
+         .setBackdrop(in.readString())
+         .setVideo(in.readByte() != 0)
+         .setAsFavorite(in.readByte() != 0)
+         .createMovie();
    }
 
    public long getId() {
@@ -132,44 +182,6 @@ public class Movie implements Parcelable {
       isFavMovie = favMovie;
    }
 
-   /**
-    * Build a {@link Movie} object from a given {@link JSONObject}.
-    */
-   public static Movie fromJson(JSONObject jsonObject) throws JSONException {
-      return new MovieBuilder()
-         .setId(jsonObject.getLong(ID))
-         .setTitle(jsonObject.getString(TITLE))
-         .setOriginalTitle(jsonObject.getString(ORIGINAL_TITLE))
-         .setOverview(jsonObject.getString(OVERVIEW))
-         .setPosterPath(jsonObject.getString(POSTER_PATH))
-         .setVoteAverage(jsonObject.getDouble(VOTE_AVERAGE))
-         .setVoteCount(jsonObject.getLong(VOTE_COUNT))
-         .setReleaseDate(jsonObject.getString(RELEASE_DATE))
-         .setAdultsMovie(jsonObject.getBoolean(ADULTS))
-         .setLanguage(jsonObject.getString(LANGUAGE))
-         .setBackdrop(jsonObject.getString(BACKDROP))
-         .setVideo(jsonObject.getBoolean(VIDEO))
-         .createMovie();
-   }
-
-   private static Movie fromParcel(Parcel in) {
-      return new MovieBuilder()
-         .setId(in.readLong())
-         .setTitle(in.readString())
-         .setOriginalTitle(in.readString())
-         .setOverview(in.readString())
-         .setPosterPath(in.readString())
-         .setVoteAverage(in.readDouble())
-         .setVoteCount(in.readLong())
-         .setReleaseDate(in.readString())
-         .setAdultsMovie(in.readByte() != 0)
-         .setLanguage(in.readString())
-         .setBackdrop(in.readString())
-         .setVideo(in.readByte() != 0)
-         .setAsFavorite(in.readByte() != 0)
-         .createMovie();
-   }
-
    @Override public int describeContents() {
       return 0;
    }
@@ -189,17 +201,5 @@ public class Movie implements Parcelable {
       dest.writeByte((byte) (video ? 1 : 0));
       dest.writeByte((byte) (isFavMovie ? 1 : 0));
    }
-
-   public static final Creator<Movie> CREATOR = new Creator<Movie>() {
-      @Override
-      public Movie[] newArray(int size) {
-         return new Movie[size];
-      }
-
-      @Override
-      public Movie createFromParcel(Parcel source) {
-         return fromParcel(source);
-      }
-   };
 
 }

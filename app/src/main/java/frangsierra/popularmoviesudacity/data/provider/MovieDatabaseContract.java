@@ -3,16 +3,20 @@ package frangsierra.popularmoviesudacity.data.provider;
 import android.net.Uri;
 import android.provider.BaseColumns;
 
+import frangsierra.popularmoviesudacity.data.model.Movie;
+
 /**
  * Contract class for the Movie database, it contains all the variable names that are going to be
  * used by the {@link MovieDbHelper} class.
  */
 public class MovieDatabaseContract {
-   public static final String CONTENT_AUTHORITY = "frangsierra.popularmoviesudacity";
-   public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
+   static final String CONTENT_AUTHORITY = "frangsierra.popularmoviesudacity";
+   static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
    private static final String PATH_MOVIES = "movies";
 
-
+   /**
+    * Database item to work with {@link Movie} items.
+    */
    public static class Movies implements BaseColumns {
       public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_MOVIES).build();
       public static final String TABLE_NAME = "movies";
@@ -33,7 +37,7 @@ public class MovieDatabaseContract {
       public static final String DEFAULT_SORT = BaseColumns._ID + " DESC";
 
       /** Build {@link Uri} for requested {@link #COLUMN_MOVIE_ID}. */
-      public static Uri buildMovieUri(String movieId) {
+      static Uri buildMovieUri(String movieId) {
          return CONTENT_URI.buildUpon().appendPath(movieId).build();
       }
 
