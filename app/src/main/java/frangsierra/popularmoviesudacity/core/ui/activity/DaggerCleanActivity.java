@@ -1,4 +1,4 @@
-package frangsierra.popularmoviesudacity.core.ui;
+package frangsierra.popularmoviesudacity.core.ui.activity;
 
 import android.os.Bundle;
 

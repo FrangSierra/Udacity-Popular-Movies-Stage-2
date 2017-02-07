@@ -21,7 +21,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import frangsierra.popularmoviesudacity.R;
-import frangsierra.popularmoviesudacity.core.ui.DaggerCleanActivity;
+import frangsierra.popularmoviesudacity.core.ui.activity.DaggerCleanActivity;
 import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;

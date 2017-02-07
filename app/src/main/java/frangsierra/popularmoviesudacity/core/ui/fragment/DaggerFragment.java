@@ -1,30 +1,21 @@
-package frangsierra.popularmoviesudacity.core.ui;
-
-import android.os.Bundle;
+package frangsierra.popularmoviesudacity.core.ui.fragment;
 
 import java.lang.reflect.Method;
 
+import frangsierra.popularmoviesudacity.core.ui.activity.BaseActivity;
+
+
 /**
- * Custom abstract class which extends from {@link BaseActivity} and works together with DAgger
+ * Custom abstract class which extends from {@link BaseFragment} and works together with Dagger
  * to auto inject the activity with the associated component.
  *
- * @param <C> associated component to the activity.
+ * @param <C> associated component to the fragment.
  */
-public abstract class DaggerActivity<C> extends BaseActivity {
-
+public abstract class DaggerFragment<C> extends BaseFragment {
    private C component;
-
-   @Override
-   protected void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      doInject(getComponent());
-   }
 
    protected abstract C buildComponent();
 
-   /**
-    * Return the associated dagger component.
-    */
    public C getComponent() {
       if (component == null) {
          component = buildComponent();
@@ -32,9 +23,6 @@ public abstract class DaggerActivity<C> extends BaseActivity {
       return component;
    }
 
-   /**
-    * Use reflection to call the inject method from the associated component to the current activity.
-    */
    protected void doInject(C component) {
       try {
          final Method injectMethod = component.getClass().getMethod("inject", this.getClass());
