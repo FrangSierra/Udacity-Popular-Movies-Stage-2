@@ -31,6 +31,8 @@ import frangsierra.popularmoviesudacity.settings.SettingActivity;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
 import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListener;
 
+import static frangsierra.popularmoviesudacity.data.MovieSorting.SORT_BY_FAVORITE;
+
 interface MovieBrowserView {
 
    void disableLoadingControls();
@@ -95,6 +97,10 @@ public class MovieBrowserActivity extends DaggerCleanActivity<MovieBrowserPresen
       moviesRecyclerGridView.setLayoutManager(gridLayoutManager);
       moviesRecyclerGridView.addOnScrollListener(new EndlessRecyclerScrollListener(gridLayoutManager) {
          @Override public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+            //Scroll is not allowed when the filter is sorted by favorite
+           if (!PreferenceManager
+               .getDefaultSharedPreferences(MovieBrowserActivity.this)
+               .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER).equals(SORT_BY_FAVORITE))
             startMovieLoading();
          }
       });

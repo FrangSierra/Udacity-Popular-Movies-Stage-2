@@ -7,6 +7,7 @@
     <string name="filter_popular_value">popular</string>
     <string name="filter_top_rated">Filter by top rated</string>
     <string name="filter_top_rated_value">top_rated</string>
+    <string name="filter_favorites">Favorite movies</string>
     <string name="rating_text">"Rating: "</string>
     <string name="settings_title">Settings</string>
     <string name="category_general_settings">General Settings</string>

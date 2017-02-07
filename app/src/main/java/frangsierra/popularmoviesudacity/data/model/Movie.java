@@ -1,5 +1,6 @@
 package frangsierra.popularmoviesudacity.data.model;
 
+import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -7,6 +8,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import frangsierra.popularmoviesudacity.data.model.builders.MovieBuilder;
+import frangsierra.popularmoviesudacity.data.provider.MovieDatabaseContract;
 
 /**
  * POJO class for the movie's object.
@@ -202,4 +204,18 @@ public class Movie implements Parcelable {
       dest.writeByte((byte) (isFavMovie ? 1 : 0));
    }
 
+   public static Movie fromCursor(Cursor query) {
+      return new MovieBuilder()
+      .setId(query.getLong(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_ID)))
+         .setTitle(query.getString(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_TITLE)))
+         .setOriginalTitle(query.getString(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_TITLE)))
+         .setOverview(query.getString(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_OVERVIEW)))
+         .setPosterPath(query.getString(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_POSTER_PATH)))
+         .setVoteAverage(query.getDouble(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_VOTE_AVERAGE)))
+         .setVoteCount(query.getLong(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_VOTE_COUNT)))
+         .setReleaseDate(query.getString(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_RELEASE_DATE)))
+         .setBackdrop(query.getString(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_BACKDROP_PATH)))
+         .setAsFavorite(query.getInt(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_FAVORED)) > 0)
+         .createMovie();
+   }
 }
