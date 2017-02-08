@@ -6,7 +6,7 @@ import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
 import frangsierra.popularmoviesudacity.data.repository.RepositoryModule;
 
 /**
- * Created by Durdin on 31/01/2017.
+ * Application dagger component.
  */
 @ApplicationScope
 @Component(

@@ -15,9 +15,8 @@ import io.reactivex.Single;
 import io.reactivex.processors.PublishProcessor;
 
 /**
- * Created by Durdin on 31/01/2017.
+ * Interface used by {@link PopularMoviesRepositoryImpl}.
  */
-
 public interface PopularMoviesRepository {
 
    /**
