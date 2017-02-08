@@ -16,14 +16,18 @@ import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.settings.SettingActivity;
 
+import static frangsierra.popularmoviesudacity.movies.MovieBrowserFragment.MOVIE_EXTRA;
+import static frangsierra.popularmoviesudacity.movies.MovieBrowserFragment.REVIEW_EXTRA;
+import static frangsierra.popularmoviesudacity.movies.MovieBrowserFragment.VIDEO_EXTRA;
+
 /**
  * Activity container for {@link MovieBrowserFragment}. This activity is modified when used on
  * tablet devices. In this case, we will know it using
  */
 public class BrowserActivity extends BaseActivity implements BrowserView {
 
+   public static final String MOVIE_DETAILS_FRAGMENT_TAG = "fragment_movie_details";
    private static final String MOVIES_FRAGMENT_TAG = "fragment_movies";
-   private static final String MOVIE_DETAILS_FRAGMENT_TAG = "fragment_movie_details";
    private boolean tabletMode;
 
    @Override
@@ -33,7 +37,7 @@ public class BrowserActivity extends BaseActivity implements BrowserView {
 
       tabletMode = findViewById(R.id.movie_details_container) != null;
 
-     setBrowserFragment(MovieBrowserFragment.newInstance());
+      setBrowserFragment(MovieBrowserFragment.newInstance());
    }
 
    @Override public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,13 +63,12 @@ public class BrowserActivity extends BaseActivity implements BrowserView {
          setMovieDetailsFragment(MovieDetailFragment.newInstance(movie, videos, reviews));
       } else {
          Intent intent = new Intent(this, MovieDetailActivity.class);
-         Bundle bundle = new Bundle();
-         bundle.putParcelable(MovieBrowserActivity.MOVIE_EXTRA, movie);
+
+         intent.putExtra(MOVIE_EXTRA, movie);
          if (videos.size() > 0)
-            bundle.putParcelableArrayList(MovieBrowserActivity.VIDEO_EXTRA, new ArrayList<>(videos));
+            intent.putParcelableArrayListExtra(VIDEO_EXTRA, new ArrayList<>(videos));
          if (reviews.size() > 0)
-            bundle.putParcelableArrayList(MovieBrowserActivity.REVIEW_EXTRA, new ArrayList<>(reviews));
-         intent.putExtra(MovieBrowserActivity.BUNDLE_EXTRA, bundle);
+            intent.putParcelableArrayListExtra(REVIEW_EXTRA, new ArrayList<>(reviews));
          startActivity(intent);
       }
    }

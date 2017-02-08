@@ -18,15 +18,15 @@ import frangsierra.popularmoviesudacity.core.presentation.BasePresenter;
 public abstract class DaggerCleanFragment<P extends BasePresenter<V>, V, C> extends DaggerFragment<C> {
 
     @Inject
-    P _presenter; //Can't be private, so _ to avoid confusion, don't use this
+    P presenter; //Can't be private
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         doInject(getComponent());
         //noinspection unchecked
-        _presenter.bindView((V) this);
-        _presenter.onCreateView();
+        presenter.bindView((V) this);
+        presenter.onCreateView();
     }
 
     @Override
@@ -37,7 +37,7 @@ public abstract class DaggerCleanFragment<P extends BasePresenter<V>, V, C> exte
     }
 
     protected P getPresenter() {
-        if (_presenter.getView() != this) throw new IllegalArgumentException("Not bound!");
-        return _presenter;
+        if (presenter.getView() != this) throw new IllegalArgumentException("Not bound!");
+        return presenter;
     }
 }

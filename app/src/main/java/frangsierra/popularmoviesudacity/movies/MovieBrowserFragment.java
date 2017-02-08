@@ -42,8 +42,11 @@ interface MovieBrowserView {
    void startMovieDetailActivity(List<Video> videos, List<Review> reviews, Movie movie);
 }
 
-public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresenter, MovieBrowserView, MoviesComponent> implements SharedPreferences.OnSharedPreferenceChangeListener,
-   MovieGridAdapter.MovieAdapterListener, MovieBrowserView {
+/**
+ * {@link android.support.v4.app.Fragment} class used to display in different format the movie browser.
+ */
+public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
+   implements SharedPreferences.OnSharedPreferenceChangeListener, MovieGridAdapter.MovieAdapterListener, MovieBrowserView {
 
    public static final String BUNDLE_EXTRA = "BUNDLE_DETAIL";
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
@@ -66,7 +69,9 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
    public MovieBrowserFragment() {
    }
 
-
+   /**
+    * Return a new instance for {@link MovieBrowserFragment}.
+    */
    public static MovieBrowserFragment newInstance() {
       return new MovieBrowserFragment();
    }
@@ -77,12 +82,12 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
       return inflater.inflate(R.layout.activity_main, container, false);
    }
 
-   @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-      super.onActivityCreated(savedInstanceState);
+   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+      super.onViewCreated(view, savedInstanceState);
       ButterKnife.bind(this, getActivity());
       initializeRecycler();
-      startMovieLoading();
       setupSharedPreferences();
+      startMovieLoading();
    }
 
    @Override protected MoviesComponent buildComponent() {
@@ -91,7 +96,6 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
          .movieBrowserModule(new MoviesComponent.MovieBrowserModule())
          .build();
    }
-
 
    /**
     * Initialize all the needed parameters of the {@link RecyclerView}.

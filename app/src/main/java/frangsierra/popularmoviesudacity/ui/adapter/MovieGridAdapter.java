@@ -12,7 +12,6 @@ import java.util.List;
 
 import frangsierra.popularmoviesudacity.R;
 import frangsierra.popularmoviesudacity.data.model.Movie;
-import frangsierra.popularmoviesudacity.movies.MovieBrowserActivity;
 
 /**
  * Custom {@link android.support.v7.widget.RecyclerView.Adapter} which works together with a list of
@@ -83,7 +82,7 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
 
    /**
     * Custom interface used to implement {@link OnClickListener} method for each movie in {@link MovieViewHolder}.
-    * It is implemented by {@link MovieBrowserActivity}
+    * It is implemented by {@link frangsierra.popularmoviesudacity.movies.BrowserActivity}
     */
    public interface MovieAdapterListener {
       /**

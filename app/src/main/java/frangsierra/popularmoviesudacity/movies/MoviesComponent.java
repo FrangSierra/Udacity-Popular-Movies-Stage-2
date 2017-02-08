@@ -21,7 +21,7 @@ interface MoviesComponent {
 
    void inject(MovieBrowserFragment movieBrowserFragment);
 
-   void inject(MovieDetailActivity movieDetailActivity);
+   void inject(MovieDetailFragment movieDetailFragment);
 
    @Module
    class MovieBrowserModule {

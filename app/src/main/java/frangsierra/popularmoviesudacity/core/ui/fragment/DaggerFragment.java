@@ -13,6 +13,9 @@ public abstract class DaggerFragment<C> extends BaseFragment {
 
    protected abstract C buildComponent();
 
+   /**
+    * Return the associated dagger component.
+    */
    public C getComponent() {
       if (component == null) {
          component = buildComponent();

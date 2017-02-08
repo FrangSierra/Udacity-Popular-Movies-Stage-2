@@ -204,6 +204,9 @@ public class Movie implements Parcelable {
       dest.writeByte((byte) (isFavMovie ? 1 : 0));
    }
 
+   /**
+    * Return a new {@link Movie} object from a {@link Cursor}.
+    */
    public static Movie fromCursor(Cursor query) {
       return new MovieBuilder()
       .setId(query.getLong(query.getColumnIndex(MovieDatabaseContract.Movies.COLUMN_MOVIE_ID)))

@@ -40,7 +40,7 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
 
    @Override
    public void loadMovieData(@MovieSorting.MovieSortingValue String filter, int pages) {
-      interactor.retrieveMovies(filter, pages)
+      track(interactor.retrieveMovies(filter, pages)
          .zipWith(interactor.getSavedMoviesId(), (movies, favoredIds) -> {
             for (Movie movie : movies) {
                movie.setFavMovie(favoredIds.contains(movie.getId()));
@@ -57,18 +57,18 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
                return;
             }
             getView().disableLoadingControls();
-         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text));
+         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text)));
    }
 
    @Override
    public void loadMovieDetails(Movie detailMovie) {
-      interactor.retrieveReviewsFromMovie(detailMovie.getId())
+      track(interactor.retrieveReviewsFromMovie(detailMovie.getId())
          .zipWith(interactor.retrieveVideosFromMovie(detailMovie.getId()),
             (BiFunction<List<Review>, List<Video>, Pair<List<Video>, List<Review>>>) (reviews, videos) -> new Pair(videos, reviews))
          .subscribeOn(Schedulers.io())
          .subscribe(listListPair -> {
             getView().startMovieDetailActivity(listListPair.first, listListPair.second, detailMovie);
-         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text));
+         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text)));
    }
 
    @Override
