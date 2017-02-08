@@ -55,8 +55,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
-                    android:layout_height="64dp"
-                    android:layout_width="64dp"
+                    android:layout_height="@dimen/favorite_button_size"
+                    android:layout_width="@dimen/favorite_button_size"
                     android:padding="@dimen/padding_small"
                     android:scaleType="centerInside"
                     android:src="@drawable/selector_fav_button" />
@@ -162,7 +162,7 @@
 
                 <View
                     android:background="@color/colorAccent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/separator_size"
                     android:layout_width="match_parent" />
 
                 <TextView

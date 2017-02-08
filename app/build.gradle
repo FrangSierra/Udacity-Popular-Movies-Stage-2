@@ -32,7 +32,7 @@ android {
         }
     }
     buildTypes.each {
-        it.buildConfigField('String', 'MOVIES_API_KEY', "\"36968661e910fb3398116b564006bffb\"")
+        it.buildConfigField('String', 'MOVIES_API_KEY', "\"YOUR_API_KEY\"")
     }
 
     compileOptions {
