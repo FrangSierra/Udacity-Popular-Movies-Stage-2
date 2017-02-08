@@ -16,7 +16,10 @@ import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
 import frangsierra.popularmoviesudacity.settings.SettingActivity;
 
-
+/**
+ * Activity container for {@link MovieBrowserFragment}. This activity is modified when used on
+ * tablet devices. In this case, we will know it using
+ */
 public class BrowserActivity extends BaseActivity implements BrowserView {
 
    private static final String MOVIES_FRAGMENT_TAG = "fragment_movies";

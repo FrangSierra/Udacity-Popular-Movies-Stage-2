@@ -10,7 +10,7 @@
         android:name=".core.App"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".movies.MovieBrowserActivity">
+        <activity android:name=".movies.BrowserActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

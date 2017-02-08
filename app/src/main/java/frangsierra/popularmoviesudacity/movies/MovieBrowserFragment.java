@@ -24,14 +24,26 @@ import frangsierra.popularmoviesudacity.data.MovieSorting;
 import frangsierra.popularmoviesudacity.data.model.Movie;
 import frangsierra.popularmoviesudacity.data.model.Review;
 import frangsierra.popularmoviesudacity.data.model.Video;
-import frangsierra.popularmoviesudacity.data.repository.PopularMoviesRepository;
 import frangsierra.popularmoviesudacity.ui.adapter.MovieGridAdapter;
 import frangsierra.popularmoviesudacity.ui.listener.EndlessRecyclerScrollListener;
 
 import static frangsierra.popularmoviesudacity.data.MovieSorting.SORT_BY_FAVORITE;
 
+interface MovieBrowserView {
 
-public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresenter, MovieBrowserView, MoviesComponent> implements SharedPreferences.OnSharedPreferenceChangeListener, MovieGridAdapter.MovieAdapterListener, MovieBrowserView {
+   void disableLoadingControls();
+
+   void setMovies(List<Movie> movies);
+
+   void showLoadingError(int messageId);
+
+   void updateMovieAsFavored(Long movieId, Boolean favored);
+
+   void startMovieDetailActivity(List<Video> videos, List<Review> reviews, Movie movie);
+}
+
+public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresenter, MovieBrowserView, MoviesComponent> implements SharedPreferences.OnSharedPreferenceChangeListener,
+   MovieGridAdapter.MovieAdapterListener, MovieBrowserView {
 
    public static final String BUNDLE_EXTRA = "BUNDLE_DETAIL";
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
@@ -41,7 +53,6 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
 
    private static final int GRID_COLUMNS = 2;
 
-   @Inject PopularMoviesRepository popularMoviesRepository;
    @BindView(R.id.movies_grid_view) RecyclerView moviesRecyclerGridView;
    @BindView(R.id.loading_progress_bar) ProgressBar loadingProgressBar;
    @BindView(R.id.error_text) TextView errorText;
@@ -55,9 +66,15 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
    public MovieBrowserFragment() {
    }
 
+
+   public static MovieBrowserFragment newInstance() {
+      return new MovieBrowserFragment();
+   }
+
+
    @Nullable @Override
    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-      return inflater.inflate(R.layout.activity_detail, container, false);
+      return inflater.inflate(R.layout.activity_main, container, false);
    }
 
    @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -75,10 +92,6 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
          .build();
    }
 
-
-   public static MovieBrowserFragment newInstance() {
-      return new MovieBrowserFragment();
-   }
 
    /**
     * Initialize all the needed parameters of the {@link RecyclerView}.

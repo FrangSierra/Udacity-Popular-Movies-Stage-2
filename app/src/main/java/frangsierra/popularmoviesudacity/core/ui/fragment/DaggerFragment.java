@@ -2,9 +2,6 @@ package frangsierra.popularmoviesudacity.core.ui.fragment;
 
 import java.lang.reflect.Method;
 
-import frangsierra.popularmoviesudacity.core.ui.activity.BaseActivity;
-
-
 /**
  * Custom abstract class which extends from {@link BaseFragment} and works together with Dagger
  * to auto inject the activity with the associated component.

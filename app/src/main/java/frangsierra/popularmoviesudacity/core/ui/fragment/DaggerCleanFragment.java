@@ -6,7 +6,6 @@ import android.view.View;
 import javax.inject.Inject;
 
 import frangsierra.popularmoviesudacity.core.presentation.BasePresenter;
-import frangsierra.popularmoviesudacity.core.ui.activity.DaggerActivity;
 
 /**
  * Custom abstract class which extends from {@link DaggerFragment} and works together with Dagger

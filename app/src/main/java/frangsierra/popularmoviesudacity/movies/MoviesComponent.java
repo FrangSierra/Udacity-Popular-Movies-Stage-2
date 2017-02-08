@@ -19,7 +19,7 @@ import frangsierra.popularmoviesudacity.core.scopes.ViewScope;
 )
 interface MoviesComponent {
 
-   void inject(MovieBrowserActivity movieBrowserActivity);
+   void inject(MovieBrowserFragment movieBrowserFragment);
 
    void inject(MovieDetailActivity movieDetailActivity);
 
