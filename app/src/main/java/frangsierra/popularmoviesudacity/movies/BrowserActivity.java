@@ -37,6 +37,7 @@ public class BrowserActivity extends BaseActivity implements BrowserView {
 
       tabletMode = findViewById(R.id.movie_details_container) != null;
 
+      if (savedInstanceState == null)
       setBrowserFragment(MovieBrowserFragment.newInstance());
    }
 

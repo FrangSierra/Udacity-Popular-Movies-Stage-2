@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,9 +47,11 @@ interface MovieBrowserView {
  * {@link android.support.v4.app.Fragment} class used to display in different format the movie browser.
  */
 public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresenter, MovieBrowserView, MoviesComponent>
-   implements SharedPreferences.OnSharedPreferenceChangeListener, MovieGridAdapter.MovieAdapterListener, MovieBrowserView {
+      implements SharedPreferences.OnSharedPreferenceChangeListener, MovieGridAdapter.MovieAdapterListener, MovieBrowserView {
 
-   public static final String BUNDLE_EXTRA = "BUNDLE_DETAIL";
+   public static final String SCROLL_DETAIL_POSITION = "SCROLL_POSITION";
+   public static final String RECYCLER_POSITION = "RECYCLER_POSITION";
+   public static final String MOVIE_LIST_STATE = "RESTORED_MOVIES";
    public static final String MOVIE_EXTRA = "INTENT_MOVIE_DETAIL";
    public static final String VIDEO_EXTRA = "INTENT_VIDEO_DETAIL";
    public static final String REVIEW_EXTRA = "INTENT_REVIEW_DETAIL";
@@ -64,6 +67,8 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
    private MovieGridAdapter gridAdapter;
    private int pagesLoaded = 0;
    private boolean isLoading = false;
+   private int recyclerPosition;
+   private ArrayList<Movie> stateMovies;
 
    @Inject
    public MovieBrowserFragment() {
@@ -82,49 +87,74 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
       return inflater.inflate(R.layout.activity_main, container, false);
    }
 
-   @Override public void onViewCreated(View view, Bundle savedInstanceState) {
+   @Override
+   public void onViewCreated(View view, Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
       ButterKnife.bind(this, getActivity());
+
+      stateMovies = savedInstanceState != null
+            ? savedInstanceState.getParcelableArrayList(MOVIE_LIST_STATE)
+            : new ArrayList<>();
+
+      recyclerPosition = savedInstanceState != null
+            ? savedInstanceState.getInt(RECYCLER_POSITION)
+            : 0;
+
       initializeRecycler();
       setupSharedPreferences();
-      startMovieLoading();
+      if (stateMovies.size() == 0)
+         startMovieLoading();
    }
 
    @Override protected MoviesComponent buildComponent() {
       return DaggerMoviesComponent.builder()
-         .appComponent(getApplicationComponent())
-         .movieBrowserModule(new MoviesComponent.MovieBrowserModule())
-         .build();
+            .appComponent(getApplicationComponent())
+            .movieBrowserModule(new MoviesComponent.MovieBrowserModule())
+            .build();
    }
 
    /**
     * Initialize all the needed parameters of the {@link RecyclerView}.
     */
    private void initializeRecycler() {
+      if (moviesRecyclerGridView.getLayoutManager() != null) return;
       GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), GRID_COLUMNS);
       moviesRecyclerGridView.setLayoutManager(gridLayoutManager);
       moviesRecyclerGridView.addOnScrollListener(new EndlessRecyclerScrollListener(gridLayoutManager) {
          @Override public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
             //Scroll is not allowed when the filter is sorted by favorite
             if (!PreferenceManager
-               .getDefaultSharedPreferences(getActivity())
-               .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER).equals(SORT_BY_FAVORITE))
+                  .getDefaultSharedPreferences(getActivity())
+                  .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER).equals(SORT_BY_FAVORITE))
                startMovieLoading();
          }
       });
       gridAdapter = new MovieGridAdapter(MovieBrowserFragment.this, getActivity());
+      if (stateMovies.size() > 0)
+         gridAdapter.addMovies(stateMovies);
       moviesRecyclerGridView.setAdapter(gridAdapter);
+      if (recyclerPosition > 0)
+         moviesRecyclerGridView.setScrollY(recyclerPosition);
    }
 
    @Override public void onResume() {
       super.onResume();
       //If a used unselect a movie as favorite, the list should be updated when he come back to the main scree
       if (PreferenceManager
-         .getDefaultSharedPreferences(getActivity())
-         .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER).equals(SORT_BY_FAVORITE)) {
+            .getDefaultSharedPreferences(getActivity())
+            .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER).equals(SORT_BY_FAVORITE)) {
          clearData();
          startMovieLoading();
       }
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+      if (moviesRecyclerGridView != null)
+         outState.putInt(RECYCLER_POSITION, moviesRecyclerGridView.getScrollY());
+      if (gridAdapter != null && gridAdapter.getItemCount() > 0)
+         outState.putParcelableArrayList(MOVIE_LIST_STATE, new ArrayList<>(gridAdapter.getList()));
    }
 
    private void setupSharedPreferences() {
@@ -159,8 +189,8 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
       isLoading = true;
 
       final @MovieSorting.MovieSortingValue String filter = PreferenceManager
-         .getDefaultSharedPreferences(getActivity())
-         .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER);
+            .getDefaultSharedPreferences(getActivity())
+            .getString(getString(R.string.pref_sorting_key), MovieSorting.DEFAULT_FILTER);
 
       getPresenter().loadMovieData(filter, pagesLoaded + 1);
    }
@@ -170,7 +200,7 @@ public class MovieBrowserFragment extends DaggerCleanFragment<MovieBrowserPresen
       super.onDestroy();
       // Unregister VisualizerActivity as an OnPreferenceChangedListener to avoid any memory leaks.
       PreferenceManager.getDefaultSharedPreferences(getActivity())
-         .unregisterOnSharedPreferenceChangeListener(this);
+            .unregisterOnSharedPreferenceChangeListener(this);
    }
 
    /**

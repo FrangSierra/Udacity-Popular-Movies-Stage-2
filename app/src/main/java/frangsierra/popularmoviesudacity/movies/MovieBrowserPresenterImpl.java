@@ -40,7 +40,7 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
 
    @Override
    public void loadMovieData(@MovieSorting.MovieSortingValue String filter, int pages) {
-      track(interactor.retrieveMovies(filter, pages)
+      interactor.retrieveMovies(filter, pages)
          .zipWith(interactor.getSavedMoviesId(), (movies, favoredIds) -> {
             for (Movie movie : movies) {
                movie.setFavMovie(favoredIds.contains(movie.getId()));
@@ -50,14 +50,14 @@ public class MovieBrowserPresenterImpl extends BasePresenterImpl<MovieBrowserVie
          .subscribeOn(Schedulers.io())
          .observeOn(AndroidSchedulers.mainThread())
          .subscribe(movies -> {
-            if (movies != null && movies.size() > 0) {
-               getView().setMovies(movies);
-            } else if (filter.equals(SORT_BY_FAVORITE)) {
-               getView().showLoadingError(R.string.favorite_empty_error_text);
-               return;
-            }
-            getView().disableLoadingControls();
-         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text)));
+               if (movies != null && movies.size() > 0) {
+                  getView().setMovies(movies);
+               } else if (filter.equals(SORT_BY_FAVORITE)) {
+                  getView().showLoadingError(R.string.favorite_empty_error_text);
+                  return;
+               }
+               getView().disableLoadingControls();
+         }, throwable -> getView().showLoadingError(R.string.loading_fail_error_text));
    }
 
    @Override

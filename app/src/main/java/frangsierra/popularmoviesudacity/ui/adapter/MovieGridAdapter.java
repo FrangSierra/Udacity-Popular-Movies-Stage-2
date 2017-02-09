@@ -58,6 +58,10 @@ public class MovieGridAdapter extends RecyclerView.Adapter<MovieViewHolder> {
       return movieList.get(position);
    }
 
+   public List<Movie> getList() {
+      return movieList;
+   }
+
    /**
     * Go through the movies on the list to update one of them with his new favored value.
     */

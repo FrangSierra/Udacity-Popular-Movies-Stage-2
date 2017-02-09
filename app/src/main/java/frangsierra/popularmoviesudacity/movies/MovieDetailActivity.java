@@ -34,13 +34,15 @@ public class MovieDetailActivity extends BaseActivity {
          throw new NullPointerException("Movie can't be null");
       }
 
-      Movie movie = intent.getParcelableExtra(MOVIE_EXTRA);
-      ArrayList<Video> videos = intent.getParcelableArrayListExtra(VIDEO_EXTRA);
-      ArrayList<Review> reviews = intent.getParcelableArrayListExtra(REVIEW_EXTRA);
+      if (savedInstanceState == null) {
+         Movie movie = intent.getParcelableExtra(MOVIE_EXTRA);
+         ArrayList<Video> videos = intent.getParcelableArrayListExtra(VIDEO_EXTRA);
+         ArrayList<Review> reviews = intent.getParcelableArrayListExtra(REVIEW_EXTRA);
 
-      MovieDetailFragment fragment = MovieDetailFragment.newInstance(movie, videos, reviews);
-      getSupportFragmentManager().beginTransaction()
-         .replace(R.id.movie_detail_container, fragment, MOVIE_DETAILS_FRAGMENT_TAG)
-         .commit();
+         MovieDetailFragment fragment = MovieDetailFragment.newInstance(movie, videos, reviews);
+         getSupportFragmentManager().beginTransaction()
+                 .replace(R.id.movie_detail_container, fragment, MOVIE_DETAILS_FRAGMENT_TAG)
+                 .commit();
+      }
    }
 }
